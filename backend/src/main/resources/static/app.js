@@ -32,6 +32,10 @@ const AppState = {
   },
   addresses: [],
   selectedAddressId: null,
+  currentCity: 'Bengaluru',
+  currentLocality: 'Indiranagar',
+  locationLat: 12.9784,
+  locationLng: 77.6408,
   activeOrders: [],
   currentTracking: null,
   trackingPollTimer: null,
@@ -214,7 +218,33 @@ function setupEventListeners() {
   });
 
   document.getElementById('navAddressPill').addEventListener('click', () => {
-    openAccountModal('addresses');
+    openLocationPickerModal();
+  });
+
+  const closeLocBtn = document.getElementById('closeLocationModalBtn');
+  if (closeLocBtn) {
+    closeLocBtn.addEventListener('click', () => {
+      document.getElementById('locationPickerModal').style.display = 'none';
+    });
+  }
+
+  const confirmLocBtn = document.getElementById('confirmLocationBtn');
+  if (confirmLocBtn) {
+    confirmLocBtn.addEventListener('click', confirmLocationSelection);
+  }
+
+  const manageAddrBtn = document.getElementById('openManageAddressesBtn');
+  if (manageAddrBtn) {
+    manageAddrBtn.addEventListener('click', () => {
+      document.getElementById('locationPickerModal').style.display = 'none';
+      openAccountModal('addresses');
+    });
+  }
+
+  document.querySelectorAll('.city-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectCity(btn.dataset.city);
+    });
   });
 
   // Cart Trigger Button
@@ -414,6 +444,11 @@ function renderAddresses() {
   if (defaultAddr) {
     AppState.selectedAddressId = defaultAddr.id;
     navDisplay.textContent = `${defaultAddr.label}: ${defaultAddr.street}, ${defaultAddr.city}`;
+    if (defaultAddr.city) {
+      AppState.currentCity = defaultAddr.city;
+      AppState.currentLocality = defaultAddr.suite || defaultAddr.street || 'Indiranagar';
+      updateHeroDeliveryBadge(defaultAddr.city);
+    }
   }
 
   // Render in Cart Drawer checkout
@@ -450,6 +485,11 @@ window.selectAddress = function(id) {
   const chosen = AppState.addresses.find(a => a.id === id);
   if (chosen) {
     document.getElementById('navAddressDisplay').textContent = `${chosen.label}: ${chosen.street}, ${chosen.city}`;
+    if (chosen.city) {
+      AppState.currentCity = chosen.city;
+      AppState.currentLocality = chosen.suite || chosen.street || 'Indiranagar';
+      updateHeroDeliveryBadge(chosen.city);
+    }
   }
 };
 
@@ -1482,4 +1522,249 @@ function updateAuthUI() {
     if (profileBtn) profileBtn.style.display = 'none';
   }
 }
+
+// ==========================================
+// Delivery Location Picker & Leaflet Map
+// ==========================================
+const INDIAN_CITIES = {
+  'Bengaluru': {
+    city: 'Bengaluru',
+    locality: 'Indiranagar',
+    lat: 12.9784,
+    lng: 77.6408,
+    state: 'Karnataka',
+    sub: 'Serving Indiranagar, Koramangala, HSR, Whitefield & central zones'
+  },
+  'Mumbai': {
+    city: 'Mumbai',
+    locality: 'Bandra West',
+    lat: 19.0596,
+    lng: 72.8295,
+    state: 'Maharashtra',
+    sub: 'Serving Bandra, Andheri, Colaba, Juhu & BKC'
+  },
+  'Delhi NCR': {
+    city: 'Delhi NCR',
+    locality: 'Connaught Place',
+    lat: 28.6315,
+    lng: 77.2167,
+    state: 'Delhi',
+    sub: 'Serving CP, Cyber Hub Gurgaon, Noida & South Delhi'
+  },
+  'Hyderabad': {
+    city: 'Hyderabad',
+    locality: 'Banjara Hills',
+    lat: 17.4156,
+    lng: 78.4350,
+    state: 'Telangana',
+    sub: 'Serving Banjara Hills, Jubilee Hills, Hitec City & Gachibowli'
+  },
+  'Pune': {
+    city: 'Pune',
+    locality: 'Koregaon Park',
+    lat: 18.5362,
+    lng: 73.8940,
+    state: 'Maharashtra',
+    sub: 'Serving Koregaon Park, Kothrud, Viman Nagar & Kalyani Nagar'
+  },
+  'Chennai': {
+    city: 'Chennai',
+    locality: 'Anna Nagar',
+    lat: 13.0850,
+    lng: 80.2101,
+    state: 'Tamil Nadu',
+    sub: 'Serving Anna Nagar, T. Nagar, Adyar & Nungambakkam'
+  }
+};
+
+let deliveryMapInstance = null;
+let deliveryMarker = null;
+
+function updateHeroDeliveryBadge(city) {
+  const heroBadge = document.getElementById('heroDeliveryBadge');
+  if (heroBadge) {
+    const formattedCity = (city || 'BENGALURU').toUpperCase();
+    heroBadge.textContent = `⚡ SUPERFAST 20-MIN DELIVERY ACROSS ${formattedCity}`;
+    heroBadge.classList.remove('badge-pulse');
+    void heroBadge.offsetWidth;
+    heroBadge.classList.add('badge-pulse');
+  }
+}
+
+function openLocationPickerModal() {
+  const modal = document.getElementById('locationPickerModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+
+  const quickContainer = document.getElementById('savedAddressesQuickContainer');
+  const quickList = document.getElementById('quickAddressesList');
+  if (quickContainer && quickList && AppState.addresses && AppState.addresses.length > 0) {
+    quickContainer.style.display = 'block';
+    quickList.innerHTML = AppState.addresses.map(a => `
+      <div class="quick-addr-item" onclick="selectQuickAddress(${a.id})" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-card); border: 1px solid ${a.id === AppState.selectedAddressId ? 'var(--accent-saffron)' : 'var(--border-subtle)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.1rem;">${a.label === 'Home' ? '🏠' : a.label === 'Office' ? '🏢' : '📍'}</span>
+          <div>
+            <div style="font-size: 0.825rem; font-weight: 700; color: var(--text-main);">${a.label}: ${a.street}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">${a.city}, ${a.zipCode}</div>
+          </div>
+        </div>
+        <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-saffron);">${a.id === AppState.selectedAddressId ? '✓ ACTIVE' : 'Select'}</span>
+      </div>
+    `).join('');
+  } else if (quickContainer) {
+    quickContainer.style.display = 'none';
+  }
+
+  const currentCityName = AppState.currentCity || 'Bengaluru';
+  document.querySelectorAll('.city-chip').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.city === currentCityName);
+  });
+
+  setTimeout(() => {
+    initDeliveryMap();
+  }, 120);
+}
+
+function initDeliveryMap() {
+  const container = document.getElementById('deliveryMapContainer');
+  if (!container) return;
+
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet script is still loading...');
+    setTimeout(initDeliveryMap, 300);
+    return;
+  }
+
+  const currentLat = AppState.locationLat || 12.9784;
+  const currentLng = AppState.locationLng || 77.6408;
+
+  if (!deliveryMapInstance) {
+    deliveryMapInstance = L.map('deliveryMapContainer', {
+      zoomControl: true,
+      attributionControl: false
+    }).setView([currentLat, currentLng], 14);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      subdomains: 'abcd'
+    }).addTo(deliveryMapInstance);
+
+    const customIcon = L.divIcon({
+      className: 'custom-map-pin',
+      html: '<div class="pin-marker">📍</div>',
+      iconSize: [32, 32],
+      iconAnchor: [16, 30]
+    });
+
+    deliveryMarker = L.marker([currentLat, currentLng], {
+      draggable: true,
+      icon: customIcon
+    }).addTo(deliveryMapInstance);
+
+    deliveryMarker.on('dragend', function(e) {
+      const pos = e.target.getLatLng();
+      handleMapPinMoved(pos.lat, pos.lng);
+    });
+
+    deliveryMapInstance.on('click', function(e) {
+      deliveryMarker.setLatLng(e.latlng);
+      handleMapPinMoved(e.latlng.lat, e.latlng.lng);
+    });
+  } else {
+    deliveryMapInstance.invalidateSize();
+    deliveryMapInstance.setView([currentLat, currentLng], 14);
+    deliveryMarker.setLatLng([currentLat, currentLng]);
+  }
+}
+
+function selectCity(cityName) {
+  const target = INDIAN_CITIES[cityName];
+  if (!target) return;
+
+  AppState.currentCity = target.city;
+  AppState.currentLocality = target.locality;
+  AppState.locationLat = target.lat;
+  AppState.locationLng = target.lng;
+
+  document.querySelectorAll('.city-chip').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.city === cityName);
+  });
+
+  const tag = document.getElementById('mapLocalityTag');
+  if (tag) tag.textContent = `${target.locality}, ${target.city}`;
+  const title = document.getElementById('selectedLocTitle');
+  if (title) title.textContent = `${target.locality}, ${target.city}`;
+  const sub = document.getElementById('selectedLocSubtitle');
+  if (sub) sub.textContent = target.sub;
+
+  if (deliveryMapInstance && deliveryMarker) {
+    deliveryMapInstance.setView([target.lat, target.lng], 14);
+    deliveryMarker.setLatLng([target.lat, target.lng]);
+  }
+}
+
+function handleMapPinMoved(lat, lng) {
+  AppState.locationLat = lat;
+  AppState.locationLng = lng;
+
+  let closestCity = 'Bengaluru';
+  let minDistance = Infinity;
+  for (const [key, info] of Object.entries(INDIAN_CITIES)) {
+    const d = Math.hypot(lat - info.lat, lng - info.lng);
+    if (d < minDistance) {
+      minDistance = d;
+      closestCity = key;
+    }
+  }
+
+  const target = INDIAN_CITIES[closestCity];
+  AppState.currentCity = target.city;
+  AppState.currentLocality = target.locality;
+
+  document.querySelectorAll('.city-chip').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.city === closestCity);
+  });
+
+  const tag = document.getElementById('mapLocalityTag');
+  if (tag) tag.textContent = `${target.city} (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+  const title = document.getElementById('selectedLocTitle');
+  if (title) title.textContent = `${target.locality}, ${target.city}`;
+  const sub = document.getElementById('selectedLocSubtitle');
+  if (sub) sub.textContent = `Pinpoint GPS: [${lat.toFixed(4)}, ${lng.toFixed(4)}] • Ready for 20-min express delivery`;
+}
+
+function confirmLocationSelection() {
+  const city = AppState.currentCity || 'Bengaluru';
+  const locality = AppState.currentLocality || 'Indiranagar';
+
+  const navDisplay = document.getElementById('navAddressDisplay');
+  if (navDisplay) {
+    navDisplay.textContent = `${locality}, ${city}`;
+  }
+
+  updateHeroDeliveryBadge(city);
+
+  const modal = document.getElementById('locationPickerModal');
+  if (modal) modal.style.display = 'none';
+
+  showToast(`📍 Delivery location set to ${locality}, ${city}! 20-min express delivery active.`, 'success');
+}
+
+window.selectQuickAddress = function(id) {
+  const addr = AppState.addresses.find(a => a.id === id);
+  if (!addr) return;
+  AppState.selectedAddressId = id;
+  AppState.currentCity = addr.city || 'Bengaluru';
+  AppState.currentLocality = addr.suite || addr.street || 'Indiranagar';
+
+  const match = Object.values(INDIAN_CITIES).find(c => c.city.toLowerCase() === addr.city.toLowerCase());
+  if (match) {
+    AppState.locationLat = match.lat;
+    AppState.locationLng = match.lng;
+    selectCity(match.city);
+  }
+
+  confirmLocationSelection();
+};
 
