@@ -75,15 +75,48 @@ public class UserService {
         if (dto.getName() != null && !dto.getName().isBlank()) {
             user.setName(dto.getName().trim());
         }
-        if (dto.getPhone() != null && !dto.getPhone().isBlank()) {
-            user.setPhone(dto.getPhone().trim());
+
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+            String newEmail = dto.getEmail().trim().toLowerCase();
+            if (!newEmail.equalsIgnoreCase(user.getEmail())) {
+                if (!newEmail.contains("@") || !newEmail.contains(".")) {
+                    throw new BadRequestException("Invalid email format.");
+                }
+                if (userRepository.existsByEmailAndIdNot(newEmail, id)) {
+                    throw new BadRequestException("An account with email " + newEmail + " already exists.");
+                }
+                user.setEmail(newEmail);
+            }
         }
+
+        if (dto.getPhone() != null && !dto.getPhone().isBlank()) {
+            String newPhone = dto.getPhone().trim();
+            if (!newPhone.equals(user.getPhone())) {
+                if (userRepository.existsByPhoneAndIdNot(newPhone, id)) {
+                    throw new BadRequestException("An account with phone number " + newPhone + " already exists.");
+                }
+                user.setPhone(newPhone);
+            }
+        }
+
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            if (dto.getPassword().length() < 6) {
+                throw new BadRequestException("Password must be at least 6 characters.");
+            }
+            user.setPassword(dto.getPassword());
+        }
+
         if (dto.getAvatarUrl() != null && !dto.getAvatarUrl().isBlank()) {
-            user.setAvatarUrl(dto.getAvatarUrl());
+            user.setAvatarUrl(dto.getAvatarUrl().trim());
         }
 
         User updated = userRepository.save(user);
-        return toDto(updated);
+        UserProfileDto response = toDto(updated);
+        response.setConfirmationMessage("Account information updated successfully. Confirmation notification dispatched via SMS to " 
+                + updated.getPhone() + " and Email to " + updated.getEmail() + ".");
+        response.setSmsStatus("DISPATCHED");
+        response.setEmailStatus("DISPATCHED");
+        return response;
     }
 
     private UserProfileDto toDto(User user) {

@@ -2052,3 +2052,52 @@ body {
   .hero-stats { flex-direction: row; }
   .nav-search-wrapper { display: none; }
 }
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999999;
+  pointer-events: none;
+}
+
+.toast-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: var(--radius-md, 12px);
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-main, #0f172a);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+  max-width: 400px;
+}
+
+.toast-item.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-item.toast-success {
+  border-left: 5px solid #10b981;
+}
+
+.toast-item.toast-error {
+  border-left: 5px solid #ef4444;
+}
+
+.toast-item.toast-info {
+  border-left: 5px solid #f97316;
+}
+

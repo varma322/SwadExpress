@@ -68,7 +68,7 @@
         <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Theme">
           <span id="themeToggleIcon">🌙</span>
         </button>
-        <button id="navProfileBtn" class="profile-btn" id="userProfileBtn" title="Account Settings">
+        <button id="navProfileBtn" class="profile-btn" title="Account Settings (UC-7)">
           <img id="userAvatarImg" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="Aarav Sharma" class="avatar-img">
           <span id="userNameDisplay" class="user-name">Aarav S.</span>
         </button>
@@ -501,7 +501,7 @@
   <div id="accountModal" class="modal-overlay" style="display: none;">
     <div class="modal-card wide-modal-card">
       <header class="modal-header">
-        <h2>Account Settings & Preferences</h2>
+        <h2>Account Settings (UC-7)</h2>
         <button id="closeAccountModalBtn" class="modal-close-btn" aria-label="Close Account">✕</button>
       </header>
 
@@ -512,6 +512,8 @@
 
       <!-- Tab 1: Profile -->
       <div id="profileTabContent" class="account-tab-content">
+        <div id="profileErrorAlert" class="alert-box error" style="display: none; margin-bottom: 1rem; padding: 0.75rem 1rem; border-radius: 8px; background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; font-size: 0.9rem;"></div>
+        
         <form id="profileForm" class="account-form">
           <div class="profile-avatar-row">
             <img id="profileAvatarPreview" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80" alt="Avatar" class="profile-preview-avatar">
@@ -527,15 +529,42 @@
             </div>
             <div class="form-group">
               <label for="profileEmailInput">Email Address</label>
-              <input type="email" id="profileEmailInput" class="form-input" value="aarav.sharma@example.in" disabled>
+              <input type="email" id="profileEmailInput" class="form-input" value="aarav.sharma@example.in" required>
             </div>
           </div>
-          <div class="form-group">
-            <label for="profilePhoneInput">Mobile Phone (India +91)</label>
-            <input type="tel" id="profilePhoneInput" class="form-input" value="+91 98765 43210" required>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profilePhoneInput">Mobile Phone (India +91)</label>
+              <input type="tel" id="profilePhoneInput" class="form-input" value="+91 98765 43210" required>
+            </div>
+            <div class="form-group">
+              <label for="profilePasswordInput">New Password (leave blank to keep current)</label>
+              <input type="password" id="profilePasswordInput" class="form-input" placeholder="Min. 6 characters">
+            </div>
           </div>
-          <button type="submit" id="saveProfileBtn" class="primary-btn">Save Profile Changes</button>
+          <button type="submit" id="saveProfileBtn" class="primary-btn"><span>💾</span> Save Changes & Dispatch Confirmation (UC-7)</button>
         </form>
+
+        <!-- Step 5 Confirmation Card -->
+        <div id="profileUpdateConfirmationCard" style="display: none; margin-top: 1.25rem; padding: 1.25rem; border-radius: 12px; background: #f0fdf4; border: 1px solid #86efac;">
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <span style="font-size: 1.75rem; line-height: 1;">✅</span>
+            <div>
+              <h4 style="margin: 0; color: #166534; font-size: 1.05rem; font-weight: 700;">Account Settings Updated (UC-7)</h4>
+              <p id="profileConfirmationSummary" style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #15803d;"></p>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem;">
+            <div style="background: #ffffff; padding: 0.75rem; border-radius: 8px; border: 1px solid #bbf7d0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #475569; margin-bottom: 0.25rem;">📱 SMS Notification</div>
+              <div id="profileSmsBadge" style="font-size: 0.85rem; font-weight: 600; color: #16a34a;">Status: DISPATCHED</div>
+            </div>
+            <div style="background: #ffffff; padding: 0.75rem; border-radius: 8px; border: 1px solid #bbf7d0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #475569; margin-bottom: 0.25rem;">✉️ Email Notification</div>
+              <div id="profileEmailBadge" style="font-size: 0.85rem; font-weight: 600; color: #16a34a;">Status: DISPATCHED</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Tab 2: Addresses -->

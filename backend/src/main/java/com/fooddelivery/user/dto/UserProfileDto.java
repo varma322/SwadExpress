@@ -1,5 +1,6 @@
 package com.fooddelivery.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 public class UserProfileDto {
@@ -14,6 +15,9 @@ public class UserProfileDto {
     private String smsStatus;
     private String emailStatus;
     private String token;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
 
     public UserProfileDto() {}
 
@@ -55,5 +59,8 @@ public class UserProfileDto {
 
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }
 

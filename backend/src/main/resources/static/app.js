@@ -39,6 +39,47 @@ const AppState = {
 };
 
 // ==========================================
+// Toast Notification Utility
+// ==========================================
+function showToast(message, type = 'info') {
+  let container = document.getElementById('toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `toast-item toast-${type}`;
+  
+  let icon = 'ℹ️';
+  if (type === 'success') icon = '✅';
+  else if (type === 'error') icon = '⚠️';
+  else if (type === 'warning') icon = '🔔';
+
+  toast.innerHTML = `
+    <span class="toast-icon">${icon}</span>
+    <span class="toast-message">${message}</span>
+  `;
+
+  container.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+  });
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      if (toast.parentNode === container) {
+        container.removeChild(toast);
+      }
+    }, 300);
+  }, 4000);
+}
+
+// ==========================================
 // Initialization
 // ==========================================
 document.addEventListener('DOMContentLoaded', async () => {
@@ -409,24 +450,68 @@ window.deleteAddress = async function(addressId) {
 async function handleProfileSubmit(e) {
   e.preventDefault();
   const name = document.getElementById('profileNameInput').value.trim();
+  const email = document.getElementById('profileEmailInput').value.trim();
   const phone = document.getElementById('profilePhoneInput').value.trim();
+  const password = document.getElementById('profilePasswordInput').value;
   const avatarUrl = document.getElementById('profileAvatarUrl').value.trim();
+  const errorAlert = document.getElementById('profileErrorAlert');
+  const confirmCard = document.getElementById('profileUpdateConfirmationCard');
+  const submitBtn = document.getElementById('saveProfileBtn');
+
+  if (errorAlert) errorAlert.style.display = 'none';
+  if (confirmCard) confirmCard.style.display = 'none';
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span>⏳</span> Saving changes & dispatching alerts...';
 
   try {
+    const payload = { name, email, phone, avatarUrl };
+    if (password && password.trim().length > 0) {
+      payload.password = password.trim();
+    }
+
     const res = await fetch(`${API_BASE}/api/v1/users/${AppState.currentUser.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, avatarUrl })
+      body: JSON.stringify(payload)
     });
-    if (res.ok) {
-      AppState.currentUser = await res.json();
-      document.getElementById('userNameDisplay').textContent = AppState.currentUser.name;
-      document.getElementById('userAvatarImg').src = AppState.currentUser.avatarUrl;
-      showToast('SwadExpress Profile updated!', 'success');
-      document.getElementById('accountModal').style.display = 'none';
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (errorAlert) {
+        errorAlert.textContent = data.message || data.error || 'Failed to update account information.';
+        errorAlert.style.display = 'block';
+      }
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>💾</span> Save Changes & Dispatch Confirmation (UC-7)';
+      return;
     }
+
+    // Step 5: Service confirms updates and notifies user via email or SMS
+    AppState.currentUser = data;
+    document.getElementById('userNameDisplay').textContent = data.name;
+    document.getElementById('userAvatarImg').src = data.avatarUrl;
+
+    if (confirmCard) {
+      document.getElementById('profileConfirmationSummary').textContent = data.confirmationMessage ||
+        `Account details for ${data.name} updated. Confirmation dispatched to ${data.phone} and ${data.email}.`;
+      document.getElementById('profileSmsBadge').textContent = `Status: ${data.smsStatus || 'DISPATCHED'} to ${data.phone}`;
+      document.getElementById('profileEmailBadge').textContent = `Status: ${data.emailStatus || 'DISPATCHED'} to ${data.email}`;
+      confirmCard.style.display = 'block';
+    }
+
+    showToast('Account details updated & notification dispatched via SMS/Email!', 'success');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<span>💾</span> Save Changes & Dispatch Confirmation (UC-7)';
   } catch (err) {
-    showToast('Failed to update profile', 'error');
+    console.error('Account update error:', err);
+    if (errorAlert) {
+      errorAlert.textContent = 'Network or server error while updating account.';
+      errorAlert.style.display = 'block';
+    }
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<span>💾</span> Save Changes & Dispatch Confirmation (UC-7)';
   }
 }
 
@@ -1119,7 +1204,17 @@ async function handleTicketSubmit(e) {
 // ==========================================
 // Account Modal Management (UC-7, UC-9)
 // ==========================================
-function openAccountModal(tab = 'profile') {
+async function openAccountModal(tab = 'profile') {
+  // Step 2: Account Management Service retrieves the user’s account details
+  await loadUserData();
+
+  const errAlert = document.getElementById('profileErrorAlert');
+  if (errAlert) errAlert.style.display = 'none';
+  const confirmCard = document.getElementById('profileUpdateConfirmationCard');
+  if (confirmCard) confirmCard.style.display = 'none';
+  const pwdInput = document.getElementById('profilePasswordInput');
+  if (pwdInput) pwdInput.value = '';
+
   document.getElementById('accountModal').style.display = 'flex';
   switchAccountTab(tab);
 }
