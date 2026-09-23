@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwadExpress | India's Premier Online Food Delivery & Live Tracking</title>
+  <meta name="description" content="Order authentic biryani, butter chicken, masala dosa, and street food across Bengaluru. Real-time GPS delivery tracking powered by Java Spring Boot microservices.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- System Status Banner (Backend connectivity check) -->
+  <aside id="statusBanner" class="status-banner" aria-label="System Status">
+    <div class="status-indicator live"></div>
+    <span id="backendStatusText">Spring Boot 4 Microservices API Gateway: Connected (Port 8085)</span>
+    <span class="status-tag">🇮🇳 SwadExpress India Hub</span>
+  </aside>
+
+  <!-- Sticky Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand-group">
+        <a href="#" class="brand-logo" id="brandLogo">
+          <div class="logo-icon">🌶️</div>
+          <div class="logo-text">
+            <span class="logo-main">Swad<span class="accent-orange">Express</span></span>
+            <span class="logo-sub">BHARAT KA TASTE</span>
+          </div>
+        </a>
+        <div class="delivery-address-pill" id="navAddressPill" title="Change delivery location">
+          <span class="pill-icon">📍</span>
+          <div class="pill-details">
+            <span class="pill-label">Delivering to</span>
+            <span class="pill-value" id="navAddressDisplay">Indiranagar, Bengaluru</span>
+          </div>
+          <span class="pill-arrow">▼</span>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="nav-search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="restaurantSearchInput" class="nav-search-input" placeholder="Search biryani, butter chicken, dosa, chaat, or thalis..." autocomplete="off">
+        <button id="clearSearchBtn" class="clear-search-btn" style="display: none;">✕</button>
+      </div>
+
+      <!-- Navigation Actions -->
+      <nav class="nav-actions">
+        <button id="navExploreBtn" class="nav-link active">
+          <span>🍛</span> Explore
+        </button>
+        <button id="navFavoritesBtn" class="nav-link">
+          <span>❤️</span> Favorites
+          <span id="favCountBadge" class="badge">2</span>
+        </button>
+        <button id="navOrdersBtn" class="nav-link">
+          <span>🛵</span> Orders
+          <span id="activeOrdersBadge" class="badge live-pulse">1</span>
+        </button>
+        <button id="navSupportBtn" class="nav-link">
+          <span>🎧</span> Support
+        </button>
+        <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Theme">
+          <span id="themeToggleIcon">🌙</span>
+        </button>
+        <button id="navProfileBtn" class="profile-btn" id="userProfileBtn" title="Account Settings">
+          <img id="userAvatarImg" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="Aarav Sharma" class="avatar-img">
+          <span id="userNameDisplay" class="user-name">Aarav S.</span>
+        </button>
+        <button id="cartTriggerBtn" class="cart-trigger-btn" aria-label="View Food Basket">
+          <span class="cart-icon">🛒</span>
+          <span id="cartCountBadge" class="cart-badge">0</span>
+          <span id="cartTotalDisplay" class="cart-total">₹0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="main-content">
+    <!-- Hero Banner -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-badge">⚡ SUPERFAST 20-MIN DELIVERY ACROSS BENGALURU</div>
+        <h1 class="hero-title">Desi Swad, Delivered In <span class="gradient-text">Minutes!</span></h1>
+        <p class="hero-subtitle">From royal Hyderabadi dum biryani to crispy ghee roast dosas and authentic Punjabi dhabas — fresh, hot, and tracked live.</p>
+        
+        <!-- Cuisine Quick Filter Pills -->
+        <div class="cuisine-pills-bar" id="cuisinePillsBar">
+          <button class="cuisine-pill active" data-cuisine="All">All Cuisines</button>
+          <button class="cuisine-pill" data-cuisine="North Indian">🥘 North Indian & Dhaba</button>
+          <button class="cuisine-pill" data-cuisine="Biryani & Mughlai">🍗 Biryani & Mughlai</button>
+          <button class="cuisine-pill" data-cuisine="South Indian">🥞 South Indian Tiffins</button>
+          <button class="cuisine-pill" data-cuisine="Street Food & Chaat">🥟 Street Chaat & Snacks</button>
+          <button class="cuisine-pill" data-cuisine="Coastal & Seafood">🐟 Coastal Malabar</button>
+          <button class="cuisine-pill" data-cuisine="Bengali & Sweets">🍯 Bengali Sweets & Rolls</button>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-num">500+</span>
+          <span class="stat-desc">Top Bengaluru Dhabas</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">&lt; 22m</span>
+          <span class="stat-desc">Avg Delivery Time</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">4.9★</span>
+          <span class="stat-desc">Verified Reviews</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter & Sort Sub-Bar -->
+    <section class="filter-controls-section">
+      <div class="filter-results-info">
+        <h2 id="sectionHeading" class="section-title">Top Rated Restaurants Near You</h2>
+        <span id="resultsCount" class="results-count">Showing 6 kitchens</span>
+      </div>
+      <div class="filter-actions-group">
+        <label class="toggle-control">
+          <input type="checkbox" id="vegOnlyToggle">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label"><span class="fssai-veg-dot">🟢</span> Pure Veg Only</span>
+        </label>
+        <div class="sort-dropdown-wrapper">
+          <label for="sortBySelect" class="sort-label">Sort by:</label>
+          <select id="sortBySelect" class="sort-select">
+            <option value="featured">Featured & Recommended</option>
+            <option value="rating">Highest Rated (4.8+)</option>
+            <option value="deliveryTime">Fastest Delivery</option>
+            <option value="deliveryFee">Lowest Delivery Charge</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Restaurant Cards Grid -->
+    <section class="restaurant-grid" id="restaurantGrid" aria-label="Restaurant Listings">
+      <!-- Dynamically injected via app.js -->
+    </section>
+
+    <!-- Active Orders Tracking Callout -->
+    <section id="liveOrderCallout" class="live-order-callout" style="display: none;">
+      <div class="callout-inner">
+        <div class="callout-icon pulsing">🛵</div>
+        <div class="callout-info">
+          <div class="callout-title">Order Out for Delivery: <span id="calloutRestaurantName">Meghana Foods Biryani</span></div>
+          <div class="callout-status" id="calloutStatusText">Delivery partner Suresh is en route on TVS Apache</div>
+        </div>
+        <button id="openLiveTrackerBtn" class="callout-action-btn">Track Order Live ➔</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: Restaurant Menu & Customization -->
+  <div id="menuModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card menu-modal-card">
+      <header class="modal-header menu-header">
+        <div class="menu-hero-banner" id="menuHeroBanner">
+          <button id="closeMenuModalBtn" class="modal-close-btn" aria-label="Close Menu">✕</button>
+          <div class="menu-hero-overlay">
+            <div class="menu-badge" id="menuCuisineBadge">North Indian</div>
+            <h2 id="menuRestaurantName" class="menu-rest-title">Punjab Grill & Tandoori Dhaba</h2>
+            <div class="menu-rest-meta">
+              <span id="menuRatingSpan">⭐ 4.88 (320 reviews)</span>
+              <span>•</span>
+              <span id="menuEtaSpan">⏱️ 25 mins</span>
+              <span>•</span>
+              <span id="menuMinOrderSpan">Min Order: ₹200</span>
+            </div>
+            <p id="menuAddressSpan" class="menu-address">📍 100 Feet Rd, Indiranagar, Bengaluru</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Category Filter Tabs -->
+      <nav class="menu-category-tabs" id="menuCategoryTabs">
+        <button class="cat-tab active" data-category="ALL">Full Menu</button>
+        <button class="cat-tab" data-category="Starters">Starters & Tikkas</button>
+        <button class="cat-tab" data-category="Mains">Gravies & Curries</button>
+        <button class="cat-tab" data-category="Biryani">Biryani & Rice</button>
+        <button class="cat-tab" data-category="Tiffins">South Tiffins</button>
+        <button class="cat-tab" data-category="Street Food">Chaat & Rolls</button>
+        <button class="cat-tab" data-category="Breads">Roti & Naan</button>
+        <button class="cat-tab" data-category="Desserts">Mithai & Desserts</button>
+        <button class="cat-tab" data-category="Beverages">Chai & Kaapi</button>
+      </nav>
+
+      <!-- Menu Items List -->
+      <div class="menu-items-container" id="menuItemsContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE DRAWER: Shopping Cart & Checkout -->
+  <aside id="cartDrawer" class="drawer-overlay" style="display: none;">
+    <div class="drawer-panel cart-drawer-panel">
+      <header class="drawer-header">
+        <div class="drawer-title-group">
+          <h3>Your Food Basket</h3>
+          <span id="drawerRestaurantName" class="drawer-sub">Select items to checkout</span>
+        </div>
+        <button id="closeCartDrawerBtn" class="drawer-close-btn" aria-label="Close Basket">✕</button>
+      </header>
+
+      <div class="drawer-body">
+        <!-- Empty Cart State -->
+        <div id="emptyCartView" class="empty-cart-view" style="display: none;">
+          <div class="empty-icon">🍲</div>
+          <h4>Your basket is empty</h4>
+          <p>Explore authentic Indian dishes and add your favorites here.</p>
+          <button id="startShoppingBtn" class="primary-btn">Browse Restaurants</button>
+        </div>
+
+        <!-- Populated Cart Items -->
+        <div id="populatedCartView" class="populated-cart-view">
+          <div class="cart-items-list" id="cartItemsList">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Delivery Address Section -->
+          <div class="checkout-block address-block">
+            <div class="block-header">
+              <span class="block-title">📍 Delivery Location</span>
+              <button id="openAddAddressModalBtn" class="text-link-btn">+ Add New Address</button>
+            </div>
+            <div id="addressOptionsList" class="address-options-list">
+              <!-- Dynamically populated from Address Service -->
+            </div>
+            <input type="text" id="deliveryInstructionsInput" class="form-input" placeholder="Delivery notes (e.g. Ring flat bell, leave with security)...">
+          </div>
+
+          <!-- Payment Method Section (Indian UPI & Cards) -->
+          <div class="checkout-block payment-block">
+            <span class="block-title">🇮🇳 Payment Options</span>
+            <div class="payment-methods-grid">
+              <label class="pay-method-card active">
+                <input type="radio" name="paymentMethod" value="UPI" checked>
+                <div class="pay-card-content">
+                  <span class="pay-icon">⚡</span>
+                  <div class="pay-text">
+                    <strong>Instant UPI (Zero Convenience Fee)</strong>
+                    <span>Google Pay • PhonePe • Paytm • CRED (aarav@okaxis)</span>
+                  </div>
+                </div>
+              </label>
+              <label class="pay-method-card">
+                <input type="radio" name="paymentMethod" value="CARD">
+                <div class="pay-card-content">
+                  <span class="pay-icon">💳</span>
+                  <div class="pay-text">
+                    <strong>Credit / Debit Card & RuPay</strong>
+                    <span>RuPay • Visa • Mastercard</span>
+                  </div>
+                </div>
+              </label>
+              <label class="pay-method-card">
+                <input type="radio" name="paymentMethod" value="CASH">
+                <div class="pay-card-content">
+                  <span class="pay-icon">💵</span>
+                  <div class="pay-text">
+                    <strong>Cash on Delivery (COD) / Scan QR at Door</strong>
+                    <span>Pay courier in cash or UPI QR</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Cost Calculation Summary with GST -->
+          <div class="checkout-summary">
+            <div class="summary-row">
+              <span>Item Total</span>
+              <span id="summarySubtotal">₹0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Delivery Partner Fee</span>
+              <span id="summaryDeliveryFee">₹35.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Restaurant GST (2.5% CGST + 2.5% SGST)</span>
+              <span id="summaryTax">₹0.00</span>
+            </div>
+            <div class="summary-row total-row">
+              <span>Total Payable</span>
+              <span id="summaryTotal">₹0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="drawer-footer" id="cartDrawerFooter">
+        <button id="placeOrderBtn" class="place-order-btn">
+          <span id="placeOrderText">Confirm Order & Pay</span>
+          <span id="placeOrderTotalSpan" class="order-total-badge">₹0.00</span>
+        </button>
+      </footer>
+    </div>
+  </aside>
+
+  <!-- MODAL: Real-Time Order Tracking (UC-5) -->
+  <div id="trackingModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card tracking-modal-card">
+      <header class="modal-header">
+        <div class="tracking-header-title">
+          <span class="tracking-live-tag">🔴 LIVE SWAD TELEMETRY</span>
+          <h2 id="trackOrderTitle">Order #ORD-1002</h2>
+        </div>
+        <button id="closeTrackingModalBtn" class="modal-close-btn" aria-label="Close Tracking">✕</button>
+      </header>
+
+      <div class="tracking-body">
+        <!-- ETA & Status Highlight Card -->
+        <div class="tracking-status-banner">
+          <div class="eta-box">
+            <span class="eta-label">Expected in</span>
+            <span class="eta-time" id="trackEtaDisplay">15 mins</span>
+          </div>
+          <div class="status-msg-box">
+            <div class="status-headline" id="trackStatusHeadline">Delivery Partner En Route</div>
+            <div class="status-sub" id="trackStatusMessage">Suresh Gowda is delivering via TVS Apache RTR 160.</div>
+          </div>
+        </div>
+
+        <!-- 4-Step Milestone Progression -->
+        <div class="stepper-wrapper">
+          <div class="step-item" id="step1">
+            <div class="step-circle">1</div>
+            <span class="step-title">Order Placed</span>
+          </div>
+          <div class="step-line" id="line1"></div>
+          <div class="step-item" id="step2">
+            <div class="step-circle">2</div>
+            <span class="step-title">Kitchen Cooking</span>
+          </div>
+          <div class="step-line" id="line2"></div>
+          <div class="step-item" id="step3">
+            <div class="step-circle">3</div>
+            <span class="step-title">Partner Out</span>
+          </div>
+          <div class="step-line" id="line3"></div>
+          <div class="step-item" id="step4">
+            <div class="step-circle">4</div>
+            <span class="step-title">Delivered</span>
+          </div>
+        </div>
+
+        <!-- Simulated Visual GPS Route Display (Bengaluru Route) -->
+        <div class="telemetry-map-simulator">
+          <div class="map-grid-overlay"></div>
+          <div class="route-line-svg">
+            <div class="map-node restaurant-node">
+              <span>🏪</span>
+              <label id="mapRestLabel">Dhaba / Kitchen</label>
+            </div>
+            <div class="driver-pulse-marker" id="driverPulseMarker">
+              <span>🛵</span>
+              <span class="pulse-ring"></span>
+            </div>
+            <div class="map-node destination-node">
+              <span>🏠</span>
+              <label>Indiranagar</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Courier Contact Card -->
+        <div class="courier-card">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="Delivery Partner" class="courier-avatar">
+          <div class="courier-info">
+            <div class="courier-name" id="trackDriverName">Ramesh Kumar</div>
+            <div class="courier-vehicle" id="trackVehicle">Hero Splendor Plus (#KA-03-EX-9921)</div>
+            <div class="courier-rating" id="trackDriverRating">⭐ 4.94 Rating (Vaccinated)</div>
+          </div>
+          <a href="tel:+919845012345" class="call-driver-btn" id="callDriverBtn">📞 Call Partner</a>
+        </div>
+
+        <!-- Simulation Step Control -->
+        <div class="tracking-action-bar">
+          <button id="advanceStepBtn" class="secondary-btn">
+            ⚡ Advance Milestone (Simulate Kitchen & Transit Lifecycle)
+          </button>
+          <button id="reviewDeliveredOrderBtn" class="primary-btn" style="display: none;">
+            ⭐ Rate Food & Delivery Experience
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Review & Rating (UC-6) -->
+  <div id="reviewModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card review-modal-card">
+      <header class="modal-header">
+        <div class="modal-title-group">
+          <h2>Kaisa Tha Khana? Rate Experience</h2>
+          <span id="reviewRestaurantName" class="modal-sub">Punjab Grill & Tandoori Dhaba</span>
+        </div>
+        <button id="closeReviewModalBtn" class="modal-close-btn" aria-label="Close Review">✕</button>
+      </header>
+
+      <form id="reviewForm" class="review-form">
+        <input type="hidden" id="reviewOrderId">
+        <input type="hidden" id="reviewRestaurantId">
+
+        <div class="rating-picker-group">
+          <span class="rating-prompt">How was the taste and packaging?</span>
+          <div class="star-rating-widget" id="starRatingWidget">
+            <span class="star-btn" data-value="1">★</span>
+            <span class="star-btn" data-value="2">★</span>
+            <span class="star-btn" data-value="3">★</span>
+            <span class="star-btn" data-value="4">★</span>
+            <span class="star-btn active" data-value="5">★</span>
+          </div>
+          <span id="ratingScoreText" class="rating-score-text">5.0 - Ekdum Lajawab! (Exceptional)</span>
+        </div>
+
+        <div class="form-group">
+          <label for="reviewCommentsInput">Your Review Commentary</label>
+          <textarea id="reviewCommentsInput" class="form-textarea" rows="4" placeholder="Tell us what you loved about the spices, flavors, and delivery speed..." required></textarea>
+        </div>
+
+        <button type="submit" id="submitReviewBtn" class="primary-btn">Submit Desi Review</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Orders History & Past Invoices -->
+  <div id="ordersHistoryModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card wide-modal-card">
+      <header class="modal-header">
+        <h2>Order History & Invoices</h2>
+        <button id="closeOrdersModalBtn" class="modal-close-btn" aria-label="Close Orders">✕</button>
+      </header>
+      <div class="orders-list-container" id="ordersListContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Customer Support Center (UC-10) -->
+  <div id="supportModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card wide-modal-card">
+      <header class="modal-header">
+        <div class="modal-title-group">
+          <h2>SwadExpress Care & Resolution</h2>
+          <span class="modal-sub">24/7 Priority Support across India</span>
+        </div>
+        <button id="closeSupportModalBtn" class="modal-close-btn" aria-label="Close Support">✕</button>
+      </header>
+
+      <div class="support-modal-grid">
+        <!-- Ticket Submission Form -->
+        <div class="support-form-card">
+          <h3>Create Support Request</h3>
+          <form id="supportTicketForm" class="ticket-form">
+            <div class="form-group">
+              <label for="ticketOrderSelect">Associated Order (Optional)</label>
+              <select id="ticketOrderSelect" class="form-select">
+                <option value="">-- General Inquiry / No Order --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="ticketCategorySelect">Issue Category</label>
+              <select id="ticketCategorySelect" class="form-select" required>
+                <option value="LATE_DELIVERY">⏱️ Delivery Partner Delay</option>
+                <option value="MISSING_ITEM">📦 Missing Item / Spilled Packaging</option>
+                <option value="FOOD_QUALITY">🍲 Food Taste or Temperature Issue</option>
+                <option value="REFUND">💳 UPI / Refund Status</option>
+                <option value="OTHER">💬 General Feedback</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="ticketDescriptionInput">Problem Description</label>
+              <textarea id="ticketDescriptionInput" class="form-textarea" rows="4" placeholder="Describe the issue with your meal or delivery partner..." required></textarea>
+            </div>
+            <button type="submit" id="submitTicketBtn" class="primary-btn">Submit Support Request</button>
+          </form>
+        </div>
+
+        <!-- Existing Tickets List -->
+        <div class="support-tickets-card">
+          <h3>Your Active Support Tickets</h3>
+          <div id="ticketsListContainer" class="tickets-list-container">
+            <!-- Dynamically populated from Support Service -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Account Settings & Address Book (UC-7, UC-9) -->
+  <div id="accountModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card wide-modal-card">
+      <header class="modal-header">
+        <h2>Account Settings & Preferences</h2>
+        <button id="closeAccountModalBtn" class="modal-close-btn" aria-label="Close Account">✕</button>
+      </header>
+
+      <div class="account-tabs-wrapper">
+        <button class="account-tab active" id="profileTabBtn">Profile & Credentials (UC-7)</button>
+        <button class="account-tab" id="addressesTabBtn">Saved Addresses (UC-9)</button>
+      </div>
+
+      <!-- Tab 1: Profile -->
+      <div id="profileTabContent" class="account-tab-content">
+        <form id="profileForm" class="account-form">
+          <div class="profile-avatar-row">
+            <img id="profileAvatarPreview" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80" alt="Avatar" class="profile-preview-avatar">
+            <div class="avatar-input-group">
+              <label for="profileAvatarUrl">Avatar Image URL</label>
+              <input type="url" id="profileAvatarUrl" class="form-input" value="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileNameInput">Full Name</label>
+              <input type="text" id="profileNameInput" class="form-input" value="Aarav Sharma" required>
+            </div>
+            <div class="form-group">
+              <label for="profileEmailInput">Email Address</label>
+              <input type="email" id="profileEmailInput" class="form-input" value="aarav.sharma@example.in" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="profilePhoneInput">Mobile Phone (India +91)</label>
+            <input type="tel" id="profilePhoneInput" class="form-input" value="+91 98765 43210" required>
+          </div>
+          <button type="submit" id="saveProfileBtn" class="primary-btn">Save Profile Changes</button>
+        </form>
+      </div>
+
+      <!-- Tab 2: Addresses -->
+      <div id="addressesTabContent" class="account-tab-content" style="display: none;">
+        <div class="addresses-manager-header">
+          <h3>Your Saved Locations</h3>
+          <button id="addNewAddressBtn" class="primary-btn">+ Add New Location</button>
+        </div>
+        <div id="addressesManagerList" class="addresses-manager-list">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Add Address Form (Toggled) -->
+        <form id="newAddressForm" class="new-address-form" style="display: none;">
+          <h4>Add New Delivery Location</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newAddressLabel">Label (e.g. Home, Office, Gym)</label>
+              <input type="text" id="newAddressLabel" class="form-input" placeholder="Home" required>
+            </div>
+            <div class="form-group">
+              <label for="newAddressStreet">Flat / House No. & Street</label>
+              <input type="text" id="newAddressStreet" class="form-input" placeholder="Flat 402, Shanti Niketan Apts" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newAddressSuite">Area / Landmark</label>
+              <input type="text" id="newAddressSuite" class="form-input" placeholder="12th Main, HAL 2nd Stage">
+            </div>
+            <div class="form-group">
+              <label for="newAddressCity">City</label>
+              <input type="text" id="newAddressCity" class="form-input" value="Bengaluru" required>
+            </div>
+            <div class="form-group">
+              <label for="newAddressState">State</label>
+              <input type="text" id="newAddressState" class="form-input" value="Karnataka" required>
+            </div>
+            <div class="form-group">
+              <label for="newAddressZip">PIN Code</label>
+              <input type="text" id="newAddressZip" class="form-input" value="560038" required>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="cancelAddressBtn" class="secondary-btn">Cancel</button>
+            <button type="submit" id="saveNewAddressBtn" class="primary-btn">Save Address</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="footer-logo">🌶️ SwadExpress India</span>
+        <p>Proudly Made in India 🇮🇳 • Powered by Java Spring Boot 4 Microservices & Stitch UI Architecture.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/swagger.html" target="_blank" class="footer-link">📖 Swagger / OpenAPI Docs</a>
+        <a href="/actuator/health" target="_blank" class="footer-link">📊 Actuator Health & Metrics</a>
+        <a href="/h2-console" target="_blank" class="footer-link">🗄️ Database Console (H2)</a>
+        <a href="file:///c:/Users/ARUN/varma_scripts/experiments/demo/BRD.md" class="footer-link">BRD Specification</a>
+        <a href="file:///c:/Users/ARUN/varma_scripts/experiments/demo/ARCHITECTURE.md" class="footer-link">Architecture Document</a>
+      </div>
+      <div class="footer-copyright">
+        © 2026 SwadExpress Technologies Private Limited. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
