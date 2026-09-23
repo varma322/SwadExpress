@@ -401,11 +401,11 @@ body {
 .cart-trigger-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: linear-gradient(135deg, var(--accent-saffron) 0%, #ea580c 100%);
   color: #ffffff;
   border: none;
-  padding: 8px 18px;
+  padding: 8px 14px;
   border-radius: var(--radius-pill);
   font-family: inherit;
   font-weight: 700;
@@ -423,11 +423,13 @@ body {
   color: #ea580c;
   font-size: 0.75rem;
   font-weight: 800;
-  padding: 2px 7px;
+  padding: 2px 8px;
+  min-width: 20px;
+  text-align: center;
   border-radius: var(--radius-pill);
-}
-.cart-total {
-  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Main Content Area */

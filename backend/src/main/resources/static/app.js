@@ -828,8 +828,8 @@ function updateCartUI() {
   const tax = subtotal * 0.05; // 5% GST on Restaurant Dining
   const total = subtotal + deliveryFee + tax;
 
-  countBadge.textContent = totalQty;
-  totalDisplay.textContent = `₹${total.toFixed(0)}`;
+  if (countBadge) countBadge.textContent = totalQty;
+  if (totalDisplay) totalDisplay.textContent = `₹${total.toFixed(0)}`;
 
   if (AppState.cart.items.length === 0) {
     emptyView.style.display = 'flex';
