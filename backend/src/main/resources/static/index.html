@@ -43,31 +43,31 @@
       <!-- Search Bar -->
       <div class="nav-search-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" id="restaurantSearchInput" class="nav-search-input" placeholder="Search biryani, butter chicken, dosa, chaat, or thalis..." autocomplete="off">
+        <input type="text" id="restaurantSearchInput" class="nav-search-input" placeholder="Search dishes, restaurants or cuisines..." autocomplete="off">
         <button id="clearSearchBtn" class="clear-search-btn" style="display: none;">✕</button>
       </div>
 
       <!-- Navigation Actions -->
       <nav class="nav-actions">
-        <button id="navExploreBtn" class="nav-link active">
-          <span>🍛</span> Explore
+        <button id="navExploreBtn" class="nav-link active" title="Explore Menu" style="display: none;">
+          <span>🍛</span> <span class="nav-label">Explore</span>
         </button>
-        <button id="navFavoritesBtn" class="nav-link">
-          <span>❤️</span> Favorites
+        <button id="navFavoritesBtn" class="nav-link" title="Your Favorites">
+          <span>❤️</span> <span class="nav-label">Favorites</span>
           <span id="favCountBadge" class="badge">2</span>
         </button>
-        <button id="navOrdersBtn" class="nav-link">
-          <span>🛵</span> Orders
+        <button id="navOrdersBtn" class="nav-link" title="Live Orders">
+          <span>🛵</span> <span class="nav-label">Orders</span>
           <span id="activeOrdersBadge" class="badge live-pulse">1</span>
         </button>
-        <button id="navSupportBtn" class="nav-link">
-          <span>🎧</span> Support
+        <button id="navSupportBtn" class="nav-link" title="Customer Support">
+          <span>🎧</span> <span class="nav-label">Support</span>
         </button>
         <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Theme">
           <span id="themeToggleIcon">🌙</span>
         </button>
         <button id="navLoginBtn" class="nav-link" title="Sign In or Register (UC-1)" style="display: none;">
-          <span>👤</span> Sign In
+          <span>👤</span> <span class="nav-label">Sign In</span>
         </button>
         <button id="navProfileBtn" class="profile-btn" title="Account Settings (UC-7)">
           <img id="userAvatarImg" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="Aarav Sharma" class="avatar-img">
