@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
   setupEventListeners();
   checkBackendHealth();
+  updateAuthUI();
   await loadUserData();
   await loadRestaurants();
   await loadUserOrders();
@@ -294,31 +295,60 @@ function setupEventListeners() {
   });
   document.getElementById('newAddressForm').addEventListener('submit', handleNewAddressSubmit);
 
-  // User Registration (UC-1: 5-Step Flow)
+  // User Registration & Auth (UC-1)
   const navRegisterBtn = document.getElementById('navRegisterBtn');
   if (navRegisterBtn) {
-    navRegisterBtn.addEventListener('click', openRegisterModal);
+    navRegisterBtn.addEventListener('click', () => openRegisterModal('register'));
+  }
+  const navLoginBtn = document.getElementById('navLoginBtn');
+  if (navLoginBtn) {
+    navLoginBtn.addEventListener('click', () => openRegisterModal('login'));
+  }
+  const navLogoutBtn = document.getElementById('navLogoutBtn');
+  if (navLogoutBtn) {
+    navLogoutBtn.addEventListener('click', handleLogout);
+  }
+  const modalLogoutBtn = document.getElementById('modalLogoutBtn');
+  if (modalLogoutBtn) {
+    modalLogoutBtn.addEventListener('click', handleLogout);
   }
   const closeRegisterModalBtn = document.getElementById('closeRegisterModalBtn');
   if (closeRegisterModalBtn) {
     closeRegisterModalBtn.addEventListener('click', closeRegisterModal);
   }
-  const userRegistrationForm = document.getElementById('userRegistrationForm');
-  if (userRegistrationForm) {
-    userRegistrationForm.addEventListener('submit', handleUserRegistration);
+  const authTabRegisterBtn = document.getElementById('authTabRegisterBtn');
+  if (authTabRegisterBtn) {
+    authTabRegisterBtn.addEventListener('click', () => switchAuthTab('register'));
   }
-  const startOrderingRegisteredBtn = document.getElementById('startOrderingRegisteredBtn');
-  if (startOrderingRegisteredBtn) {
-    startOrderingRegisteredBtn.addEventListener('click', handleContinueAsRegisteredUser);
+  const authTabLoginBtn = document.getElementById('authTabLoginBtn');
+  if (authTabLoginBtn) {
+    authTabLoginBtn.addEventListener('click', () => switchAuthTab('login'));
   }
   const switchToLoginLink = document.getElementById('switchToLoginLink');
   if (switchToLoginLink) {
     switchToLoginLink.addEventListener('click', (e) => {
       e.preventDefault();
-      closeRegisterModal();
-      openAccountModal('profile');
-      showToast('Switched to existing profile Aarav Sharma', 'info');
+      switchAuthTab('login');
     });
+  }
+  const switchToRegisterLink = document.getElementById('switchToRegisterLink');
+  if (switchToRegisterLink) {
+    switchToRegisterLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchAuthTab('register');
+    });
+  }
+  const userRegistrationForm = document.getElementById('userRegistrationForm');
+  if (userRegistrationForm) {
+    userRegistrationForm.addEventListener('submit', handleUserRegistration);
+  }
+  const userLoginForm = document.getElementById('userLoginForm');
+  if (userLoginForm) {
+    userLoginForm.addEventListener('submit', handleUserLogin);
+  }
+  const startOrderingRegisteredBtn = document.getElementById('startOrderingRegisteredBtn');
+  if (startOrderingRegisteredBtn) {
+    startOrderingRegisteredBtn.addEventListener('click', handleContinueAsRegisteredUser);
   }
 }
 
@@ -350,6 +380,10 @@ function resetFilters() {
 // API Operations: Users & Addresses (UC-1, UC-7, UC-9)
 // ==========================================
 async function loadUserData() {
+  if (!AppState.currentUser) {
+    updateAuthUI();
+    return;
+  }
   try {
     const userRes = await fetch(`${API_BASE}/api/v1/users/${AppState.currentUser.id}`);
     if (userRes.ok) {
@@ -1073,6 +1107,13 @@ async function handleReviewSubmit(e) {
 // Order History & Active Orders
 // ==========================================
 async function loadUserOrders() {
+  if (!AppState.currentUser) {
+    const badge = document.getElementById('activeOrdersBadge');
+    if (badge) badge.style.display = 'none';
+    const callout = document.getElementById('liveOrderCallout');
+    if (callout) callout.style.display = 'none';
+    return;
+  }
   try {
     const res = await fetch(`${API_BASE}/api/v1/orders/user/${AppState.currentUser.id}`);
     if (res.ok) {
@@ -1241,16 +1282,95 @@ function switchAccountTab(tab) {
 // ==========================================
 // User Registration Management (UC-1: 5-Step Flow)
 // ==========================================
-function openRegisterModal() {
+function openRegisterModal(mode = 'register') {
   document.getElementById('registerModal').style.display = 'flex';
-  document.getElementById('registerFormContainer').style.display = 'block';
   document.getElementById('registerConfirmationView').style.display = 'none';
-  document.getElementById('registerErrorAlert').style.display = 'none';
-  document.getElementById('userRegistrationForm').reset();
+  switchAuthTab(mode);
 }
 
 function closeRegisterModal() {
   document.getElementById('registerModal').style.display = 'none';
+}
+
+function switchAuthTab(mode) {
+  const regTab = document.getElementById('authTabRegisterBtn');
+  const loginTab = document.getElementById('authTabLoginBtn');
+  const regContainer = document.getElementById('registerFormContainer');
+  const loginContainer = document.getElementById('loginFormContainer');
+  const modalTitle = document.getElementById('registerModalTitle');
+  const modalSub = document.getElementById('registerModalSubtitle');
+
+  const regErr = document.getElementById('registerErrorAlert');
+  if (regErr) regErr.style.display = 'none';
+  const loginErr = document.getElementById('loginErrorAlert');
+  if (loginErr) loginErr.style.display = 'none';
+
+  if (mode === 'login') {
+    if (regTab) regTab.classList.remove('active');
+    if (loginTab) loginTab.classList.add('active');
+    if (regContainer) regContainer.style.display = 'none';
+    if (loginContainer) loginContainer.style.display = 'block';
+    if (modalTitle) modalTitle.textContent = 'Sign In to SwadExpress';
+    if (modalSub) modalSub.textContent = 'Access your saved addresses, live orders, and favorites';
+  } else {
+    if (regTab) regTab.classList.add('active');
+    if (loginTab) loginTab.classList.remove('active');
+    if (regContainer) regContainer.style.display = 'block';
+    if (loginContainer) loginContainer.style.display = 'none';
+    if (modalTitle) modalTitle.textContent = 'Create New Account (UC-1)';
+    if (modalSub) modalSub.textContent = 'Join SwadExpress for authentic flavors & live tracking';
+  }
+}
+
+async function handleUserLogin(e) {
+  e.preventDefault();
+  const emailInput = document.getElementById('loginEmail');
+  const passwordInput = document.getElementById('loginPassword');
+  const errorAlert = document.getElementById('loginErrorAlert');
+  const submitBtn = document.getElementById('submitLoginBtn');
+
+  if (errorAlert) errorAlert.style.display = 'none';
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span>⏳</span> Signing In...';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/v1/users/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: emailInput.value.trim(),
+        password: passwordInput.value
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (errorAlert) {
+        errorAlert.textContent = data.message || data.error || 'Invalid email or password.';
+        errorAlert.style.display = 'block';
+      }
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>🔐</span> Sign In to SwadExpress';
+      return;
+    }
+
+    AppState.currentUser = data;
+    closeRegisterModal();
+    updateAuthUI();
+    await loadUserData();
+    await loadUserOrders();
+    showToast(`Welcome back, ${data.name}!`, 'success');
+  } catch (err) {
+    console.error('Login error:', err);
+    if (errorAlert) {
+      errorAlert.textContent = 'Failed to connect to authentication service.';
+      errorAlert.style.display = 'block';
+    }
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<span>🔐</span> Sign In to SwadExpress';
+  }
 }
 
 async function handleUserRegistration(e) {
@@ -1293,6 +1413,11 @@ async function handleUserRegistration(e) {
 
     // Step 5: Display confirmation screen showing dispatched SMS and Email
     document.getElementById('registerFormContainer').style.display = 'none';
+    const loginCont = document.getElementById('loginFormContainer');
+    if (loginCont) loginCont.style.display = 'none';
+    const authTabs = document.getElementById('authTabsWrapper');
+    if (authTabs) authTabs.style.display = 'none';
+    
     const confirmView = document.getElementById('registerConfirmationView');
     confirmView.style.display = 'block';
 
@@ -1302,9 +1427,7 @@ async function handleUserRegistration(e) {
     document.getElementById('regEmailRecipient').textContent = `Status: ${data.emailStatus || 'DISPATCHED'} to ${data.email}`;
     document.getElementById('regNewUserName').textContent = data.name;
 
-    // Store newly registered user for immediate login
     window._lastRegisteredUser = data;
-
     showToast(`Account created for ${data.name}! Confirmation email & SMS dispatched.`, 'success');
   } catch (err) {
     errorAlert.textContent = 'Server connection error. Please try again.';
@@ -1325,13 +1448,44 @@ function handleContinueAsRegisteredUser() {
       phone: user.phone,
       avatarUrl: user.avatarUrl
     };
-    const parts = user.name.split(' ');
-    document.getElementById('userNameDisplay').textContent = parts[0] + (parts[1] ? ' ' + parts[1][0] + '.' : '');
-    document.getElementById('userAvatarImg').src = user.avatarUrl;
     closeRegisterModal();
+    updateAuthUI();
+    loadUserData();
     showToast(`Logged in as ${user.name}! Welcome to SwadExpress.`, 'success');
   } else {
     closeRegisterModal();
+  }
+}
+
+function handleLogout() {
+  AppState.currentUser = null;
+  const accountModal = document.getElementById('accountModal');
+  if (accountModal) accountModal.style.display = 'none';
+  updateAuthUI();
+  showToast('You have been logged out of SwadExpress. Register or Sign In anytime!', 'info');
+}
+
+function updateAuthUI() {
+  const registerBtn = document.getElementById('navRegisterBtn');
+  const loginBtn = document.getElementById('navLoginBtn');
+  const profileBtn = document.getElementById('navProfileBtn');
+  const logoutBtn = document.getElementById('navLogoutBtn');
+
+  if (AppState.currentUser) {
+    if (registerBtn) registerBtn.style.display = 'none';
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (profileBtn) {
+      profileBtn.style.display = 'inline-flex';
+      const parts = AppState.currentUser.name.split(' ');
+      document.getElementById('userNameDisplay').textContent = parts[0] + (parts[1] ? ' ' + parts[1][0] + '.' : '');
+      document.getElementById('userAvatarImg').src = AppState.currentUser.avatarUrl || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80';
+    }
+    if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+  } else {
+    if (registerBtn) registerBtn.style.display = 'inline-flex';
+    if (loginBtn) loginBtn.style.display = 'inline-flex';
+    if (profileBtn) profileBtn.style.display = 'none';
+    if (logoutBtn) logoutBtn.style.display = 'none';
   }
 }
 
