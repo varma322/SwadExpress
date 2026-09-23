@@ -1466,13 +1466,10 @@ function handleLogout() {
 }
 
 function updateAuthUI() {
-  const registerBtn = document.getElementById('navRegisterBtn');
   const loginBtn = document.getElementById('navLoginBtn');
   const profileBtn = document.getElementById('navProfileBtn');
-  const logoutBtn = document.getElementById('navLogoutBtn');
 
   if (AppState.currentUser) {
-    if (registerBtn) registerBtn.style.display = 'none';
     if (loginBtn) loginBtn.style.display = 'none';
     if (profileBtn) {
       profileBtn.style.display = 'inline-flex';
@@ -1480,12 +1477,9 @@ function updateAuthUI() {
       document.getElementById('userNameDisplay').textContent = parts[0] + (parts[1] ? ' ' + parts[1][0] + '.' : '');
       document.getElementById('userAvatarImg').src = AppState.currentUser.avatarUrl || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80';
     }
-    if (logoutBtn) logoutBtn.style.display = 'inline-flex';
   } else {
-    if (registerBtn) registerBtn.style.display = 'inline-flex';
     if (loginBtn) loginBtn.style.display = 'inline-flex';
     if (profileBtn) profileBtn.style.display = 'none';
-    if (logoutBtn) logoutBtn.style.display = 'none';
   }
 }
 
