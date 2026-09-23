@@ -10,6 +10,10 @@ public class UserProfileDto {
     private String phone;
     private String avatarUrl;
     private LocalDateTime createdAt;
+    private String confirmationMessage;
+    private String smsStatus;
+    private String emailStatus;
+    private String token;
 
     public UserProfileDto() {}
 
@@ -39,4 +43,17 @@ public class UserProfileDto {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public String getConfirmationMessage() { return confirmationMessage; }
+    public void setConfirmationMessage(String confirmationMessage) { this.confirmationMessage = confirmationMessage; }
+
+    public String getSmsStatus() { return smsStatus; }
+    public void setSmsStatus(String smsStatus) { this.smsStatus = smsStatus; }
+
+    public String getEmailStatus() { return emailStatus; }
+    public void setEmailStatus(String emailStatus) { this.emailStatus = emailStatus; }
+
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
 }
+

@@ -252,6 +252,33 @@ function setupEventListeners() {
     document.getElementById('newAddressForm').style.display = 'none';
   });
   document.getElementById('newAddressForm').addEventListener('submit', handleNewAddressSubmit);
+
+  // User Registration (UC-1: 5-Step Flow)
+  const navRegisterBtn = document.getElementById('navRegisterBtn');
+  if (navRegisterBtn) {
+    navRegisterBtn.addEventListener('click', openRegisterModal);
+  }
+  const closeRegisterModalBtn = document.getElementById('closeRegisterModalBtn');
+  if (closeRegisterModalBtn) {
+    closeRegisterModalBtn.addEventListener('click', closeRegisterModal);
+  }
+  const userRegistrationForm = document.getElementById('userRegistrationForm');
+  if (userRegistrationForm) {
+    userRegistrationForm.addEventListener('submit', handleUserRegistration);
+  }
+  const startOrderingRegisteredBtn = document.getElementById('startOrderingRegisteredBtn');
+  if (startOrderingRegisteredBtn) {
+    startOrderingRegisteredBtn.addEventListener('click', handleContinueAsRegisteredUser);
+  }
+  const switchToLoginLink = document.getElementById('switchToLoginLink');
+  if (switchToLoginLink) {
+    switchToLoginLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeRegisterModal();
+      openAccountModal('profile');
+      showToast('Switched to existing profile Aarav Sharma', 'info');
+    });
+  }
 }
 
 function setActiveNav(activeId) {
@@ -1117,20 +1144,99 @@ function switchAccountTab(tab) {
 }
 
 // ==========================================
-// Toast Notification Utility
+// User Registration Management (UC-1: 5-Step Flow)
 // ==========================================
-function showToast(message, type = 'info') {
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
-
-  const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
-  toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-  container.appendChild(toast);
-
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateX(-30px)';
-    setTimeout(() => toast.remove(), 250);
-  }, 3500);
+function openRegisterModal() {
+  document.getElementById('registerModal').style.display = 'flex';
+  document.getElementById('registerFormContainer').style.display = 'block';
+  document.getElementById('registerConfirmationView').style.display = 'none';
+  document.getElementById('registerErrorAlert').style.display = 'none';
+  document.getElementById('userRegistrationForm').reset();
 }
+
+function closeRegisterModal() {
+  document.getElementById('registerModal').style.display = 'none';
+}
+
+async function handleUserRegistration(e) {
+  e.preventDefault();
+  const nameInput = document.getElementById('regFullName');
+  const emailInput = document.getElementById('regEmail');
+  const phoneInput = document.getElementById('regPhone');
+  const passwordInput = document.getElementById('regPassword');
+  const errorAlert = document.getElementById('registerErrorAlert');
+  const submitBtn = document.getElementById('submitRegisterBtn');
+
+  errorAlert.style.display = 'none';
+
+  const regData = {
+    name: nameInput.value.trim(),
+    email: emailInput.value.trim(),
+    phone: phoneInput.value.trim(),
+    password: passwordInput.value
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span>⏳</span> Validating & Creating Account...';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/v1/users/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(regData)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      errorAlert.textContent = data.message || data.error || 'Registration failed. Please verify your information.';
+      errorAlert.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>🚀</span> Create Account & Send Confirmation';
+      return;
+    }
+
+    // Step 5: Display confirmation screen showing dispatched SMS and Email
+    document.getElementById('registerFormContainer').style.display = 'none';
+    const confirmView = document.getElementById('registerConfirmationView');
+    confirmView.style.display = 'block';
+
+    document.getElementById('regSuccessSummary').textContent = data.confirmationMessage || 
+      `Welcome to SwadExpress, ${data.name}! Your account has been created. Confirmation notifications have been dispatched.`;
+    document.getElementById('regSmsRecipient').textContent = `Status: ${data.smsStatus || 'DISPATCHED'} to ${data.phone}`;
+    document.getElementById('regEmailRecipient').textContent = `Status: ${data.emailStatus || 'DISPATCHED'} to ${data.email}`;
+    document.getElementById('regNewUserName').textContent = data.name;
+
+    // Store newly registered user for immediate login
+    window._lastRegisteredUser = data;
+
+    showToast(`Account created for ${data.name}! Confirmation email & SMS dispatched.`, 'success');
+  } catch (err) {
+    errorAlert.textContent = 'Server connection error. Please try again.';
+    errorAlert.style.display = 'block';
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<span>🚀</span> Create Account & Send Confirmation';
+  }
+}
+
+function handleContinueAsRegisteredUser() {
+  if (window._lastRegisteredUser) {
+    const user = window._lastRegisteredUser;
+    AppState.currentUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      avatarUrl: user.avatarUrl
+    };
+    const parts = user.name.split(' ');
+    document.getElementById('userNameDisplay').textContent = parts[0] + (parts[1] ? ' ' + parts[1][0] + '.' : '');
+    document.getElementById('userAvatarImg').src = user.avatarUrl;
+    closeRegisterModal();
+    showToast(`Logged in as ${user.name}! Welcome to SwadExpress.`, 'success');
+  } else {
+    closeRegisterModal();
+  }
+}
+

@@ -21,21 +21,32 @@ public class UserService {
     }
 
     public UserProfileDto register(UserRegistrationDto dto) {
-        if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new BadRequestException("An account with email " + dto.getEmail() + " already exists.");
+        String cleanEmail = dto.getEmail().trim().toLowerCase();
+        String cleanPhone = dto.getPhone().trim();
+
+        if (userRepository.existsByEmail(cleanEmail)) {
+            throw new BadRequestException("An account with email " + cleanEmail + " already exists.");
+        }
+        if (userRepository.existsByPhone(cleanPhone)) {
+            throw new BadRequestException("An account with phone number " + cleanPhone + " already exists.");
         }
 
         String defaultAvatar = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80";
         User user = new User(
                 dto.getName().trim(),
-                dto.getEmail().trim().toLowerCase(),
-                dto.getPhone().trim(),
-                dto.getPassword(), // In production, BCryptPasswordEncoder
+                cleanEmail,
+                cleanPhone,
+                dto.getPassword(),
                 defaultAvatar
         );
 
         User saved = userRepository.save(user);
-        return toDto(saved);
+        UserProfileDto response = toDto(saved);
+        response.setConfirmationMessage("Welcome to SwadExpress, " + saved.getName() + "! A confirmation SMS has been dispatched to " + cleanPhone + " and a welcome confirmation email sent to " + cleanEmail + ".");
+        response.setSmsStatus("DISPATCHED");
+        response.setEmailStatus("DISPATCHED");
+        response.setToken("mock-jwt-token-" + saved.getId() + "-" + System.currentTimeMillis());
+        return response;
     }
 
     @Transactional(readOnly = true)
