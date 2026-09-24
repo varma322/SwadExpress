@@ -810,6 +810,39 @@ window.openMenuModal = async function(restaurantId) {
   }
 };
 
+function getItemCartQuantity(itemId) {
+  if (!AppState.activeRestaurant || AppState.cart.restaurantId !== AppState.activeRestaurant.id) {
+    return 0;
+  }
+  const cartItem = AppState.cart.items.find(i => i.id === itemId);
+  return cartItem ? cartItem.quantity : 0;
+}
+
+function renderItemActionHtml(itemId) {
+  const qty = getItemCartQuantity(itemId);
+  if (qty > 0) {
+    return `
+      <div class="menu-item-stepper" id="stepper-${itemId}">
+        <button class="menu-step-btn minus" onclick="event.stopPropagation(); updateItemQuantity(${itemId}, -1)" aria-label="Decrease quantity">−</button>
+        <span class="menu-step-qty">${qty}</span>
+        <button class="menu-step-btn plus" onclick="event.stopPropagation(); updateItemQuantity(${itemId}, 1)" aria-label="Increase quantity">+</button>
+      </div>
+    `;
+  }
+  return `
+    <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${itemId})">+ ADD</button>
+  `;
+}
+
+function syncMenuItemButtons() {
+  document.querySelectorAll('.item-action-wrapper').forEach(wrapper => {
+    const itemId = parseInt(wrapper.dataset.itemId, 10);
+    if (!isNaN(itemId)) {
+      wrapper.innerHTML = renderItemActionHtml(itemId);
+    }
+  });
+}
+
 function renderMenuItems() {
   const container = document.getElementById('menuItemsContainer');
   let items = [...AppState.activeMenu];
@@ -840,7 +873,9 @@ function renderMenuItems() {
 
       <div class="item-media">
         <img src="${item.imageUrl}" alt="${item.name}" class="item-img" loading="lazy">
-        <button class="add-to-cart-btn" onclick="addToCart(${item.id})">+ ADD</button>
+        <div class="item-action-wrapper" id="itemAction-${item.id}" data-item-id="${item.id}">
+          ${renderItemActionHtml(item.id)}
+        </div>
       </div>
     </div>
   `).join('');
@@ -898,6 +933,9 @@ function updateCartUI() {
 
   if (countBadge) countBadge.textContent = totalQty;
   if (totalDisplay) totalDisplay.textContent = `₹${total.toFixed(0)}`;
+
+  // Synchronize menu item steppers on active menu view
+  syncMenuItemButtons();
 
   if (AppState.cart.items.length === 0) {
     emptyView.style.display = 'flex';
