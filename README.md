@@ -35,17 +35,41 @@ Built in accordance with the Business Requirements Document ([`BRD.md`](file:///
 
 ## 🚀 How to Run
 
+### Prerequisites
+- **Java**: JDK 21 or newer (Java 21 to Java 26 supported)
+- **Maven**: Included via Maven Wrapper (`mvnw.cmd` on Windows, `./mvnw` on Linux/macOS)
+- **Browser**: Chrome, Edge, Firefox, or Safari
+
 ### Option 1: Native Spring Boot (Recommended for Local Dev)
-Run using the included Maven Wrapper:
+Run using the included Maven Wrapper from the `backend/` directory:
 
 ```powershell
 cd backend
 .\mvnw.cmd spring-boot:run
 ```
 
+*Or package and run the executable JAR:*
+```powershell
+cd backend
+.\mvnw.cmd package -DskipTests
+java -jar target\food-delivery-backend-0.0.1-SNAPSHOT.jar
+```
+
 Once started:
-- **Web App**: Open your browser at [http://localhost:8080/](http://localhost:8080/)
-- **H2 Database Console**: [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (JDBC URL: `jdbc:h2:mem:fooddeliverydb`, User: `sa`, Password: empty)
+- **Web Application**: [http://localhost:8085/](http://localhost:8085/)
+- **Swagger / OpenAPI 3.0 Documentation**: [http://localhost:8085/swagger.html](http://localhost:8085/swagger.html)
+- **OpenAPI JSON Specification**: [http://localhost:8085/v3/api-docs](http://localhost:8085/v3/api-docs)
+- **H2 In-Memory Database Console**: [http://localhost:8085/h2-console](http://localhost:8085/h2-console)
+  - **JDBC URL**: `jdbc:h2:mem:fooddeliverydb`
+  - **User**: `sa`
+  - **Password**: *(leave blank)*
+- **Actuator Health & Metrics**: [http://localhost:8085/actuator/health](http://localhost:8085/actuator/health)
+
+### 🔑 Pre-Seeded Demo Account
+The database is pre-seeded on startup with Indian culinary restaurants (Meghana Foods, Empire Restaurant, Vidyarthi Bhavan, Nagarjuna, etc.) and a demo user:
+- **Email**: `aarav.sharma@example.in`
+- **Password**: `password123`
+*(You can also register a new account anytime via the UI.)*
 
 ### Option 2: Docker Compose
 ```powershell
