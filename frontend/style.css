@@ -2108,8 +2108,26 @@ body {
   .hero-badge { align-self: center; }
   .cuisine-pills-bar { justify-content: center; }
   .hero-stats { flex-direction: row; }
+  .nav-search-wrapper {
+    display: flex;
+    flex: 1 1 140px;
+    min-width: 130px;
+    max-width: 260px;
+    margin: 0 4px;
+  }
+  .nav-search-input {
+    padding: 7px 28px 7px 32px;
+    font-size: 0.8125rem;
+  }
+  .search-icon {
+    left: 10px;
+  }
+}
+
+@media (max-width: 580px) {
   .nav-search-wrapper { display: none; }
 }
+
 
 /* Toast Notifications */
 .toast-container {
@@ -2214,24 +2232,156 @@ body {
   color: #fb923c;
 }
 
-/* Custom Leaflet Map Pin */
+/* Premium Vector Icon System & FSSAI Standards */
+.ui-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, stroke 0.15s ease;
+}
+
+.brand-svg-icon {
+  display: block;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+
+.badge-bolt-svg {
+  display: inline-block;
+  vertical-align: -1px;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+.star-svg {
+  display: inline-block;
+  vertical-align: -1px;
+  flex-shrink: 0;
+}
+
+.meta-svg {
+  display: inline-block;
+  vertical-align: -2px;
+  flex-shrink: 0;
+}
+
+.heart-svg {
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), fill 0.2s ease, stroke 0.2s ease;
+}
+
+.fav-btn:hover .heart-svg {
+  transform: scale(1.18);
+}
+
+.fav-btn.active .heart-svg {
+  fill: #f43f5e;
+  stroke: #f43f5e;
+}
+
+/* Authentic FSSAI Veg & Non-Veg Geometric Badges */
+.fssai-veg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid #16a34a;
+  border-radius: 3px;
+  background: transparent;
+  flex-shrink: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.fssai-veg::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #16a34a;
+}
+
+.fssai-nonveg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid #dc2626;
+  border-radius: 3px;
+  background: transparent;
+  flex-shrink: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.fssai-nonveg::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-bottom: 7px solid #dc2626;
+}
+
+/* Modal and Drawer Close Buttons */
+.modal-close-btn,
+.drawer-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.modal-close-btn:hover,
+.drawer-close-btn:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-main);
+  border-color: var(--border-strong);
+  transform: rotate(90deg);
+}
+
+.modal-close-btn svg,
+.drawer-close-btn svg {
+  display: block;
+  pointer-events: none;
+}
+
+/* City Chip Vector Micro-Icons */
+.city-chip svg {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-right: 5px;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+
+/* Custom Vector Leaflet Map Pin */
 .custom-map-pin {
   background: transparent;
   border: none;
 }
 
-.custom-map-pin .pin-marker {
-  font-size: 28px;
-  line-height: 1;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+.custom-map-pin .pin-marker-svg-wrap {
+  width: 32px;
+  height: 40px;
   cursor: grab;
   user-select: none;
-  transition: transform 0.15s ease;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+  transition: transform 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.custom-map-pin .pin-marker:active {
+.custom-map-pin .pin-marker-svg-wrap:active {
   cursor: grabbing;
-  transform: scale(1.15);
+  transform: scale(1.2) translateY(-6px);
 }
 
 /* Leaflet Container Overrides for Theme */
@@ -2258,4 +2408,12 @@ body {
   color: var(--accent-saffron) !important;
 }
 
+@keyframes spinIcon {
+  to { transform: rotate(360deg); }
+}
 
+.spin-icon {
+  animation: spinIcon 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}

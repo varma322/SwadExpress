@@ -24,57 +24,112 @@
     <div class="nav-container">
       <div class="brand-group">
         <a href="#" class="brand-logo" id="brandLogo">
-          <div class="logo-icon">🌶️</div>
+          <div class="logo-icon" aria-hidden="true">
+            <svg class="brand-svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <path d="M12 2C11 4 9 5.5 7 6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M15.5 5C14.2 6.2 13 8 13 10.5c0 6.5 6 8.5 6 13a6.5 6.5 0 0 1-13 0c0-4.5 3.5-8 5-12 1-2.6.8-4.5 4.5-6.5z" fill="#ffffff"/>
+            </svg>
+          </div>
           <div class="logo-text">
             <span class="logo-main">Swad<span class="accent-orange">Express</span></span>
             <span class="logo-sub">BHARAT KA TASTE</span>
           </div>
         </a>
         <div class="delivery-address-pill" id="navAddressPill" title="Change delivery location">
-          <span class="pill-icon">📍</span>
+          <span class="pill-icon">
+            <svg class="ui-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--accent-saffron)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </span>
           <div class="pill-details">
             <span class="pill-label">Delivering to</span>
             <span class="pill-value" id="navAddressDisplay">Indiranagar, Bengaluru</span>
           </div>
-          <span class="pill-arrow">▼</span>
+          <span class="pill-arrow">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </span>
         </div>
       </div>
 
       <!-- Search Bar -->
       <div class="nav-search-wrapper">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
         <input type="text" id="restaurantSearchInput" class="nav-search-input" placeholder="Search dishes, restaurants or cuisines..." autocomplete="off">
-        <button id="clearSearchBtn" class="clear-search-btn" style="display: none;">✕</button>
+        <button id="clearSearchBtn" class="clear-search-btn" style="display: none;" aria-label="Clear search">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
 
       <!-- Navigation Actions -->
       <nav class="nav-actions">
         <button id="navExploreBtn" class="nav-link active" title="Explore Menu" style="display: none;">
-          <span>🍛</span> <span class="nav-label">Explore</span>
+          <svg class="ui-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/>
+            <path d="M7 2v20"/>
+            <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+          </svg>
+          <span class="nav-label">Explore</span>
         </button>
         <button id="navFavoritesBtn" class="nav-link" title="Your Favorites">
-          <span>❤️</span> <span class="nav-label">Favorites</span>
+          <svg class="ui-icon" viewBox="0 0 24 24" width="16" height="16" fill="#f43f5e" stroke="none">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span class="nav-label">Favorites</span>
           <span id="favCountBadge" class="badge">2</span>
         </button>
         <button id="navOrdersBtn" class="nav-link" title="Live Orders">
-          <span>🛵</span> <span class="nav-label">Orders</span>
+          <svg class="ui-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="5.5" cy="17.5" r="3.5"/>
+            <circle cx="18.5" cy="17.5" r="3.5"/>
+            <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>
+          </svg>
+          <span class="nav-label">Orders</span>
           <span id="activeOrdersBadge" class="badge live-pulse">1</span>
         </button>
         <button id="navSupportBtn" class="nav-link" title="Customer Support">
-          <span>🎧</span> <span class="nav-label">Support</span>
+          <svg class="ui-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+          </svg>
+          <span class="nav-label">Support</span>
         </button>
         <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Theme">
-          <span id="themeToggleIcon">🌙</span>
+          <span id="themeToggleIcon">
+            <svg class="ui-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+          </span>
         </button>
         <button id="navLoginBtn" class="nav-link" title="Sign In or Register (UC-1)" style="display: none;">
-          <span>👤</span> <span class="nav-label">Sign In</span>
+          <svg class="ui-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="nav-label">Sign In</span>
         </button>
         <button id="navProfileBtn" class="profile-btn" title="Account Settings (UC-7)">
           <img id="userAvatarImg" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="Aarav Sharma" class="avatar-img">
           <span id="userNameDisplay" class="user-name">Aarav S.</span>
         </button>
         <button id="cartTriggerBtn" class="cart-trigger-btn" aria-label="View Food Basket" title="View Food Basket">
-          <span class="cart-icon">🛒</span>
+          <span class="cart-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </span>
           <span id="cartCountBadge" class="cart-badge">0</span>
         </button>
       </nav>
@@ -86,19 +141,22 @@
     <!-- Hero Banner -->
     <section class="hero-section">
       <div class="hero-content">
-        <div class="hero-badge" id="heroDeliveryBadge">⚡ SUPERFAST 20-MIN DELIVERY ACROSS BENGALURU</div>
+        <div class="hero-badge" id="heroDeliveryBadge">
+          <svg class="badge-bolt-svg" viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          SUPERFAST 20-MIN DELIVERY ACROSS BENGALURU
+        </div>
         <h1 class="hero-title">Desi Swad, Delivered In <span class="gradient-text">Minutes!</span></h1>
         <p class="hero-subtitle">From royal Hyderabadi dum biryani to crispy ghee roast dosas and authentic Punjabi dhabas — fresh, hot, and tracked live.</p>
         
         <!-- Cuisine Quick Filter Pills -->
         <div class="cuisine-pills-bar" id="cuisinePillsBar">
           <button class="cuisine-pill active" data-cuisine="All">All Cuisines</button>
-          <button class="cuisine-pill" data-cuisine="North Indian">🥘 North Indian & Dhaba</button>
-          <button class="cuisine-pill" data-cuisine="Biryani & Mughlai">🍗 Biryani & Mughlai</button>
-          <button class="cuisine-pill" data-cuisine="South Indian">🥞 South Indian Tiffins</button>
-          <button class="cuisine-pill" data-cuisine="Street Food & Chaat">🥟 Street Chaat & Snacks</button>
-          <button class="cuisine-pill" data-cuisine="Coastal & Seafood">🐟 Coastal Malabar</button>
-          <button class="cuisine-pill" data-cuisine="Bengali & Sweets">🍯 Bengali Sweets & Rolls</button>
+          <button class="cuisine-pill" data-cuisine="North Indian">North Indian & Dhaba</button>
+          <button class="cuisine-pill" data-cuisine="Biryani & Mughlai">Biryani & Mughlai</button>
+          <button class="cuisine-pill" data-cuisine="South Indian">South Indian Tiffins</button>
+          <button class="cuisine-pill" data-cuisine="Street Food & Chaat">Street Chaat & Snacks</button>
+          <button class="cuisine-pill" data-cuisine="Coastal & Seafood">Coastal Malabar</button>
+          <button class="cuisine-pill" data-cuisine="Bengali & Sweets">Bengali Sweets & Rolls</button>
         </div>
       </div>
       <div class="hero-stats">
@@ -111,7 +169,7 @@
           <span class="stat-desc">Avg Delivery Time</span>
         </div>
         <div class="stat-card">
-          <span class="stat-num">4.9★</span>
+          <span class="stat-num">4.9 <svg class="star-svg" viewBox="0 0 24 24" width="16" height="16" fill="#f59e0b" style="vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
           <span class="stat-desc">Verified Reviews</span>
         </div>
       </div>
@@ -127,7 +185,7 @@
         <label class="toggle-control">
           <input type="checkbox" id="vegOnlyToggle">
           <span class="toggle-slider"></span>
-          <span class="toggle-label"><span class="fssai-veg-dot">🟢</span> Pure Veg Only</span>
+          <span class="toggle-label"><span class="fssai-veg" style="margin-right: 4px;"></span> Pure Veg Only</span>
         </label>
         <div class="sort-dropdown-wrapper">
           <label for="sortBySelect" class="sort-label">Sort by:</label>
@@ -149,7 +207,13 @@
     <!-- Active Orders Tracking Callout -->
     <section id="liveOrderCallout" class="live-order-callout" style="display: none;">
       <div class="callout-inner">
-        <div class="callout-icon pulsing">🛵</div>
+        <div class="callout-icon pulsing">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="5.5" cy="17.5" r="3.5"/>
+            <circle cx="18.5" cy="17.5" r="3.5"/>
+            <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>
+          </svg>
+        </div>
         <div class="callout-info">
           <div class="callout-title">Order Out for Delivery: <span id="calloutRestaurantName">Meghana Foods Biryani</span></div>
           <div class="callout-status" id="calloutStatusText">Delivery partner Suresh is en route on TVS Apache</div>
@@ -164,18 +228,32 @@
     <div class="modal-card menu-modal-card">
       <header class="modal-header menu-header">
         <div class="menu-hero-banner" id="menuHeroBanner">
-          <button id="closeMenuModalBtn" class="modal-close-btn" aria-label="Close Menu">✕</button>
+          <button id="closeMenuModalBtn" class="modal-close-btn" aria-label="Close Menu">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
           <div class="menu-hero-overlay">
             <div class="menu-badge" id="menuCuisineBadge">North Indian</div>
             <h2 id="menuRestaurantName" class="menu-rest-title">Punjab Grill & Tandoori Dhaba</h2>
             <div class="menu-rest-meta">
-              <span id="menuRatingSpan">⭐ 4.88 (320 reviews)</span>
+              <span id="menuRatingSpan" style="display: inline-flex; align-items: center; gap: 4px;">
+                <svg class="star-svg" viewBox="0 0 24 24" width="13" height="13" fill="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                4.88 (320 reviews)
+              </span>
               <span>•</span>
-              <span id="menuEtaSpan">⏱️ 25 mins</span>
+              <span id="menuEtaSpan" style="display: inline-flex; align-items: center; gap: 4px;">
+                <svg class="meta-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                25 mins
+              </span>
               <span>•</span>
               <span id="menuMinOrderSpan">Min Order: ₹200</span>
             </div>
-            <p id="menuAddressSpan" class="menu-address">📍 100 Feet Rd, Indiranagar, Bengaluru</p>
+            <p id="menuAddressSpan" class="menu-address" style="display: flex; align-items: center; gap: 4px;">
+              <svg class="meta-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              100 Feet Rd, Indiranagar, Bengaluru
+            </p>
           </div>
         </div>
       </header>
@@ -208,13 +286,25 @@
           <h3>Your Food Basket</h3>
           <span id="drawerRestaurantName" class="drawer-sub">Select items to checkout</span>
         </div>
-        <button id="closeCartDrawerBtn" class="drawer-close-btn" aria-label="Close Basket">✕</button>
+        <button id="closeCartDrawerBtn" class="drawer-close-btn" aria-label="Close Basket">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </header>
 
       <div class="drawer-body">
         <!-- Empty Cart State -->
         <div id="emptyCartView" class="empty-cart-view" style="display: none;">
-          <div class="empty-icon">🍲</div>
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--text-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 4v2"/>
+              <path d="M4 18h16"/>
+              <path d="M4 14a8 8 0 0 1 16 0"/>
+              <line x1="2" x2="22" y1="18" y2="18"/>
+            </svg>
+          </div>
           <h4>Your basket is empty</h4>
           <p>Explore authentic Indian dishes and add your favorites here.</p>
           <button id="startShoppingBtn" class="primary-btn">Browse Restaurants</button>
@@ -229,7 +319,13 @@
           <!-- Delivery Address Section -->
           <div class="checkout-block address-block">
             <div class="block-header">
-              <span class="block-title">📍 Delivery Location</span>
+              <span class="block-title">
+                <svg class="ui-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--accent-saffron)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                Delivery Location
+              </span>
               <button id="openAddAddressModalBtn" class="text-link-btn">+ Add New Address</button>
             </div>
             <div id="addressOptionsList" class="address-options-list">
@@ -240,12 +336,22 @@
 
           <!-- Payment Method Section (Indian UPI & Cards) -->
           <div class="checkout-block payment-block">
-            <span class="block-title">🇮🇳 Payment Options</span>
+            <span class="block-title">
+              <svg class="ui-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                <rect width="20" height="14" x="2" y="5" rx="2"/>
+                <line x1="2" x2="22" y1="10" y2="10"/>
+              </svg>
+              Payment Options
+            </span>
             <div class="payment-methods-grid">
               <label class="pay-method-card active">
                 <input type="radio" name="paymentMethod" value="UPI" checked>
                 <div class="pay-card-content">
-                  <span class="pay-icon">⚡</span>
+                  <span class="pay-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--accent-saffron)">
+                      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                  </span>
                   <div class="pay-text">
                     <strong>Instant UPI (Zero Convenience Fee)</strong>
                     <span>Google Pay • PhonePe • Paytm • CRED (aarav@okaxis)</span>
@@ -255,7 +361,12 @@
               <label class="pay-method-card">
                 <input type="radio" name="paymentMethod" value="CARD">
                 <div class="pay-card-content">
-                  <span class="pay-icon">💳</span>
+                  <span class="pay-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="20" height="14" x="2" y="5" rx="2"/>
+                      <line x1="2" x2="22" y1="10" y2="10"/>
+                    </svg>
+                  </span>
                   <div class="pay-text">
                     <strong>Credit / Debit Card & RuPay</strong>
                     <span>RuPay • Visa • Mastercard</span>
@@ -265,7 +376,12 @@
               <label class="pay-method-card">
                 <input type="radio" name="paymentMethod" value="CASH">
                 <div class="pay-card-content">
-                  <span class="pay-icon">💵</span>
+                  <span class="pay-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="20" height="12" x="2" y="6" rx="2"/>
+                      <circle cx="12" cy="12" r="2"/>
+                    </svg>
+                  </span>
                   <div class="pay-text">
                     <strong>Cash on Delivery (COD) / Scan QR at Door</strong>
                     <span>Pay courier in cash or UPI QR</span>
@@ -312,13 +428,22 @@
       <header class="modal-header">
         <div>
           <h2 id="locationModalTitle" style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
-            <span>📍</span> Select Delivery Location
+            <svg class="ui-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent-saffron)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Select Delivery Location
           </h2>
           <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
             Choose your city or pinpoint your address on the live map for instant 20-min delivery
           </p>
         </div>
-        <button id="closeLocationModalBtn" class="modal-close-btn" aria-label="Close Location Picker">✕</button>
+        <button id="closeLocationModalBtn" class="modal-close-btn" aria-label="Close Location Picker">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </header>
 
       <div style="padding: 20px 24px; display: flex; flex-direction: column; gap: 16px;">
@@ -329,22 +454,28 @@
           </label>
           <div class="city-chips-grid" id="cityChipsGrid">
             <button type="button" class="city-chip active" data-city="Bengaluru">
-              <span class="city-icon">🌳</span> Bengaluru
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+              Bengaluru
             </button>
             <button type="button" class="city-chip" data-city="Mumbai">
-              <span class="city-icon">🌊</span> Mumbai
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+              Mumbai
             </button>
             <button type="button" class="city-chip" data-city="Delhi NCR">
-              <span class="city-icon">🏛️</span> Delhi NCR
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18"/><line x1="10" x2="10" y1="18"/><line x1="14" x2="14" y1="18"/><line x1="18" x2="18" y1="18"/><polygon points="12 2 20 7 4 7"/></svg>
+              Delhi NCR
             </button>
             <button type="button" class="city-chip" data-city="Hyderabad">
-              <span class="city-icon">💎</span> Hyderabad
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+              Hyderabad
             </button>
             <button type="button" class="city-chip" data-city="Pune">
-              <span class="city-icon">🏰</span> Pune
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Pune
             </button>
             <button type="button" class="city-chip" data-city="Chennai">
-              <span class="city-icon">🏖️</span> Chennai
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+              Chennai
             </button>
           </div>
         </div>
@@ -353,7 +484,7 @@
         <div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
-              Live Pinpoint Map (Drag 📍 or Click to Set)
+              Live Pinpoint Map (Drag pin or click map to set)
             </label>
             <span id="mapLocalityTag" style="font-size: 0.75rem; font-weight: 700; color: var(--accent-saffron); background: #fff7ed; padding: 2px 8px; border-radius: 999px; border: 1px solid #fed7aa;">
               Indiranagar, Bengaluru
@@ -365,7 +496,10 @@
         <!-- Selected Location Details Preview Card -->
         <div class="selected-location-card" id="selectedLocCard" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px;">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 1.5rem;">📍</span>
+            <svg class="ui-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--accent-saffron)" stroke-width="2.2">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
             <div>
               <div id="selectedLocTitle" style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);">Indiranagar, Bengaluru</div>
               <div id="selectedLocSubtitle" style="font-size: 0.8rem; color: var(--text-muted);">Serving all residential & commercial zones</div>
@@ -373,7 +507,10 @@
           </div>
           <div style="text-align: right;">
             <div style="font-size: 0.75rem; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 4px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
-              ⚡ 20-min Express
+              <svg class="badge-bolt-svg" viewBox="0 0 24 24" width="11" height="11" fill="currentColor">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+              20-min Express
             </div>
           </div>
         </div>
@@ -388,11 +525,18 @@
         </div>
 
         <div style="display: flex; gap: 10px; margin-top: 4px;">
-          <button type="button" id="confirmLocationBtn" class="primary-btn" style="flex: 1; padding: 12px;">
-            <span>✅</span> Confirm Delivery Location
+          <button type="button" id="confirmLocationBtn" class="primary-btn" style="flex: 1; padding: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Confirm Delivery Location
           </button>
-          <button type="button" id="openManageAddressesBtn" class="secondary-btn" style="font-size: 0.85rem; white-space: nowrap;">
-            ⚙️ Manage Addresses
+          <button type="button" id="openManageAddressesBtn" class="secondary-btn" style="font-size: 0.85rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            Manage Addresses
           </button>
         </div>
       </div>
@@ -404,10 +548,17 @@
     <div class="modal-card tracking-modal-card">
       <header class="modal-header">
         <div class="tracking-header-title">
-          <span class="tracking-live-tag">🔴 LIVE SWAD TELEMETRY</span>
+          <span class="tracking-live-tag">
+            <span class="status-indicator live" style="margin-right: 4px;"></span> LIVE SWAD TELEMETRY
+          </span>
           <h2 id="trackOrderTitle">Order #ORD-1002</h2>
         </div>
-        <button id="closeTrackingModalBtn" class="modal-close-btn" aria-label="Close Tracking">✕</button>
+        <button id="closeTrackingModalBtn" class="modal-close-btn" aria-label="Close Tracking">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </header>
 
       <div class="tracking-body">
@@ -451,15 +602,26 @@
           <div class="map-grid-overlay"></div>
           <div class="route-line-svg">
             <div class="map-node restaurant-node">
-              <span>🏪</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/>
+                <path d="M7 2v20"/>
+                <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+              </svg>
               <label id="mapRestLabel">Dhaba / Kitchen</label>
             </div>
             <div class="driver-pulse-marker" id="driverPulseMarker">
-              <span>🛵</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="5.5" cy="17.5" r="3.5"/>
+                <circle cx="18.5" cy="17.5" r="3.5"/>
+                <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>
+              </svg>
               <span class="pulse-ring"></span>
             </div>
             <div class="map-node destination-node">
-              <span>🏠</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
               <label>Indiranagar</label>
             </div>
           </div>
@@ -471,18 +633,30 @@
           <div class="courier-info">
             <div class="courier-name" id="trackDriverName">Ramesh Kumar</div>
             <div class="courier-vehicle" id="trackVehicle">Hero Splendor Plus (#KA-03-EX-9921)</div>
-            <div class="courier-rating" id="trackDriverRating">⭐ 4.94 Rating (Vaccinated)</div>
+            <div class="courier-rating" id="trackDriverRating">4.94 Rating (Vaccinated)</div>
           </div>
-          <a href="tel:+919845012345" class="call-driver-btn" id="callDriverBtn">📞 Call Partner</a>
+          <a href="tel:+919845012345" class="call-driver-btn" id="callDriverBtn">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            Call Partner
+          </a>
         </div>
 
         <!-- Simulation Step Control -->
         <div class="tracking-action-bar">
-          <button id="advanceStepBtn" class="secondary-btn">
-            ⚡ Advance Milestone (Simulate Kitchen & Transit Lifecycle)
+          <button id="advanceStepBtn" class="secondary-btn" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 4 15 12 5 20 5 4"/>
+              <line x1="19" x2="19" y1="5" y2="19"/>
+            </svg>
+            Advance Milestone (Simulate Kitchen & Transit Lifecycle)
           </button>
-          <button id="reviewDeliveredOrderBtn" class="primary-btn" style="display: none;">
-            ⭐ Rate Food & Delivery Experience
+          <button id="reviewDeliveredOrderBtn" class="primary-btn" style="display: none; align-items: center; justify-content: center; gap: 6px;">
+            <svg class="star-svg" viewBox="0 0 24 24" width="13" height="13" fill="#f59e0b">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            Rate Food & Delivery Experience
           </button>
         </div>
       </div>
@@ -497,7 +671,12 @@
           <h2>Kaisa Tha Khana? Rate Experience</h2>
           <span id="reviewRestaurantName" class="modal-sub">Punjab Grill & Tandoori Dhaba</span>
         </div>
-        <button id="closeReviewModalBtn" class="modal-close-btn" aria-label="Close Review">✕</button>
+        <button id="closeReviewModalBtn" class="modal-close-btn" aria-label="Close Review">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </header>
 
       <form id="reviewForm" class="review-form">
@@ -507,11 +686,11 @@
         <div class="rating-picker-group">
           <span class="rating-prompt">How was the taste and packaging?</span>
           <div class="star-rating-widget" id="starRatingWidget">
-            <span class="star-btn" data-value="1">★</span>
-            <span class="star-btn" data-value="2">★</span>
-            <span class="star-btn" data-value="3">★</span>
-            <span class="star-btn" data-value="4">★</span>
-            <span class="star-btn active" data-value="5">★</span>
+            <span class="star-btn" data-value="1"><svg class="star-svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+            <span class="star-btn" data-value="2"><svg class="star-svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+            <span class="star-btn" data-value="3"><svg class="star-svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+            <span class="star-btn" data-value="4"><svg class="star-svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+            <span class="star-btn active" data-value="5"><svg class="star-svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
           </div>
           <span id="ratingScoreText" class="rating-score-text">5.0 - Ekdum Lajawab! (Exceptional)</span>
         </div>
@@ -531,7 +710,12 @@
     <div class="modal-card wide-modal-card">
       <header class="modal-header">
         <h2>Order History & Invoices</h2>
-        <button id="closeOrdersModalBtn" class="modal-close-btn" aria-label="Close Orders">✕</button>
+        <button id="closeOrdersModalBtn" class="modal-close-btn" aria-label="Close Orders">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </header>
       <div class="orders-list-container" id="ordersListContainer">
         <!-- Rendered dynamically -->
@@ -547,7 +731,12 @@
           <h2>SwadExpress Care & Resolution</h2>
           <span class="modal-sub">24/7 Priority Support across India</span>
         </div>
-        <button id="closeSupportModalBtn" class="modal-close-btn" aria-label="Close Support">✕</button>
+        <button id="closeSupportModalBtn" class="modal-close-btn" aria-label="Close Support">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </header>
 
       <div class="support-modal-grid">
@@ -564,11 +753,11 @@
             <div class="form-group">
               <label for="ticketCategorySelect">Issue Category</label>
               <select id="ticketCategorySelect" class="form-select" required>
-                <option value="LATE_DELIVERY">⏱️ Delivery Partner Delay</option>
-                <option value="MISSING_ITEM">📦 Missing Item / Spilled Packaging</option>
-                <option value="FOOD_QUALITY">🍲 Food Taste or Temperature Issue</option>
-                <option value="REFUND">💳 UPI / Refund Status</option>
-                <option value="OTHER">💬 General Feedback</option>
+                <option value="LATE_DELIVERY">Delivery Partner Delay</option>
+                <option value="MISSING_ITEM">Missing Item / Spilled Packaging</option>
+                <option value="FOOD_QUALITY">Food Taste or Temperature Issue</option>
+                <option value="REFUND">UPI / Refund Status</option>
+                <option value="OTHER">General Feedback</option>
               </select>
             </div>
             <div class="form-group">
@@ -595,7 +784,12 @@
     <div class="modal-card wide-modal-card">
       <header class="modal-header">
         <h2>Account Settings (UC-7)</h2>
-        <button id="closeAccountModalBtn" class="modal-close-btn" aria-label="Close Account">✕</button>
+        <button id="closeAccountModalBtn" class="modal-close-btn" aria-label="Close Account">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </header>
 
       <div class="account-tabs-wrapper">
@@ -636,15 +830,31 @@
             </div>
           </div>
           <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button type="submit" id="saveProfileBtn" class="primary-btn" style="flex: 1;"><span>💾</span> Save Changes & Dispatch Confirmation (UC-7)</button>
-            <button type="button" id="modalLogoutBtn" class="secondary-btn" style="color: #ef4444; border-color: #fca5a5; font-weight: 700; white-space: nowrap;">🚪 Sign Out</button>
+            <button type="submit" id="saveProfileBtn" class="primary-btn" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              Save Changes & Dispatch Confirmation (UC-7)
+            </button>
+            <button type="button" id="modalLogoutBtn" class="secondary-btn" style="color: #ef4444; border-color: #fca5a5; font-weight: 700; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px;">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" x2="9" y1="12" y2="12"/>
+              </svg>
+              Sign Out
+            </button>
           </div>
         </form>
 
         <!-- Step 5 Confirmation Card -->
         <div id="profileUpdateConfirmationCard" style="display: none; margin-top: 1.25rem; padding: 1.25rem; border-radius: 12px; background: #f0fdf4; border: 1px solid #86efac;">
           <div style="display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.75rem;">
-            <span style="font-size: 1.75rem; line-height: 1;">✅</span>
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#16a34a" stroke-width="2.5" style="flex-shrink: 0; margin-top: 2px;">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
             <div>
               <h4 style="margin: 0; color: #166534; font-size: 1.05rem; font-weight: 700;">Account Settings Updated (UC-7)</h4>
               <p id="profileConfirmationSummary" style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #15803d;"></p>
@@ -652,11 +862,17 @@
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem;">
             <div style="background: #ffffff; padding: 0.75rem; border-radius: 8px; border: 1px solid #bbf7d0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #475569; margin-bottom: 0.25rem;">📱 SMS Notification</div>
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #475569; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 4px;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                SMS Notification
+              </div>
               <div id="profileSmsBadge" style="font-size: 0.85rem; font-weight: 600; color: #16a34a;">Status: DISPATCHED</div>
             </div>
             <div style="background: #ffffff; padding: 0.75rem; border-radius: 8px; border: 1px solid #bbf7d0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #475569; margin-bottom: 0.25rem;">✉️ Email Notification</div>
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #475569; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 4px;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                Email Notification
+              </div>
               <div id="profileEmailBadge" style="font-size: 0.85rem; font-weight: 600; color: #16a34a;">Status: DISPATCHED</div>
             </div>
           </div>
@@ -721,7 +937,12 @@
           <h2 id="registerModalTitle" style="font-size: 1.35rem; font-weight: 800; color: var(--text-main);">Welcome to SwadExpress</h2>
           <p id="registerModalSubtitle" style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">Join SwadExpress for authentic flavors & live tracking</p>
         </div>
-        <button id="closeRegisterModalBtn" class="modal-close-btn" aria-label="Close Registration">✕</button>
+        <button id="closeRegisterModalBtn" class="modal-close-btn" aria-label="Close Registration">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </header>
 
       <div class="account-tabs-wrapper" id="authTabsWrapper" style="margin-bottom: 0;">
@@ -757,8 +978,14 @@
           </div>
 
           <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
-            <button type="submit" id="submitRegisterBtn" class="primary-btn" style="width: 100%; padding: 12px; font-size: 0.95rem;">
-              <span>🚀</span> Create Account & Send Confirmation
+            <button type="submit" id="submitRegisterBtn" class="primary-btn" style="width: 100%; padding: 12px; font-size: 0.95rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <line x1="19" x2="19" y1="8" y2="14"/>
+                <line x1="22" x2="16" y1="11" y2="11"/>
+              </svg>
+              Create Account & Send Confirmation
             </button>
             <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">
               Already have an account? <a href="#" id="switchToLoginLink" style="color: var(--accent-saffron); font-weight: 700; text-decoration: none;">Switch to Sign In</a>
@@ -780,8 +1007,12 @@
             <input type="password" id="loginPassword" class="form-input" placeholder="Enter password" required autocomplete="current-password">
           </div>
           <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
-            <button type="submit" id="submitLoginBtn" class="primary-btn" style="width: 100%; padding: 12px; font-size: 0.95rem;">
-              <span>🔐</span> Sign In to SwadExpress
+            <button type="submit" id="submitLoginBtn" class="primary-btn" style="width: 100%; padding: 12px; font-size: 0.95rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Sign In to SwadExpress
             </button>
             <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">
               Need a new account? <a href="#" id="switchToRegisterLink" style="color: var(--accent-saffron); font-weight: 700; text-decoration: none;">Create an account</a>
@@ -792,22 +1023,30 @@
 
       <!-- Step 5: Confirmation Dispatched View -->
       <div id="registerConfirmationView" style="display: none; padding: 28px 24px; text-align: center;">
-        <div style="width: 64px; height: 64px; background: #ecfdf5; border: 2px solid #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 16px;">
-          ✅
+        <div style="width: 64px; height: 64px; background: #ecfdf5; border: 2px solid #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#10b981" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
         </div>
         <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">Registration Confirmed!</h3>
         <p id="regSuccessSummary" style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px;"></p>
 
         <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px; text-align: left; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 1.25rem;">📱</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+              <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/>
+              <path d="M12 18h.01"/>
+            </svg>
             <div>
               <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main);">SMS Confirmation Dispatched</div>
               <div id="regSmsRecipient" style="font-size: 0.75rem; color: var(--accent-emerald-dark); font-weight: 600;">Status: Sent to registered phone</div>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--border-subtle); padding-top: 10px;">
-            <span style="font-size: 1.25rem;">✉️</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+              <rect width="20" height="16" x="2" y="4" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
             <div>
               <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main);">Email Confirmation Dispatched</div>
               <div id="regEmailRecipient" style="font-size: 0.75rem; color: var(--accent-emerald-dark); font-weight: 600;">Status: Welcome email sent to inbox</div>
@@ -829,13 +1068,37 @@
   <footer class="app-footer">
     <div class="footer-container">
       <div class="footer-brand">
-        <span class="footer-logo">🌶️ SwadExpress India</span>
+        <span class="footer-logo" style="display: inline-flex; align-items: center; gap: 6px;">
+          <svg class="brand-svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none">
+            <path d="M12 2C11 4 9 5.5 7 6" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M15.5 5C14.2 6.2 13 8 13 10.5c0 6.5 6 8.5 6 13a6.5 6.5 0 0 1-13 0c0-4.5 3.5-8 5-12 1-2.6.8-4.5 4.5-6.5z" fill="#ea580c"/>
+          </svg>
+          SwadExpress India
+        </span>
         <p>Proudly Made in India 🇮🇳 • Powered by Java Spring Boot 4 Microservices & Stitch UI Architecture.</p>
       </div>
       <div class="footer-links">
-        <a href="/swagger.html" target="_blank" class="footer-link">📖 Swagger / OpenAPI Docs</a>
-        <a href="/actuator/health" target="_blank" class="footer-link">📊 Actuator Health & Metrics</a>
-        <a href="/h2-console" target="_blank" class="footer-link">🗄️ Database Console (H2)</a>
+        <a href="/swagger.html" target="_blank" class="footer-link">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:4px;">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+          Swagger / OpenAPI Docs
+        </a>
+        <a href="/actuator/health" target="_blank" class="footer-link">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:4px;">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+          Actuator Health & Metrics
+        </a>
+        <a href="/h2-console" target="_blank" class="footer-link">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:4px;">
+            <ellipse cx="12" cy="5" rx="9" ry="3"/>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+          </svg>
+          Database Console (H2)
+        </a>
         <a href="file:///c:/Users/ARUN/varma_scripts/experiments/demo/BRD.md" class="footer-link">BRD Specification</a>
         <a href="file:///c:/Users/ARUN/varma_scripts/experiments/demo/ARCHITECTURE.md" class="footer-link">Architecture Document</a>
       </div>

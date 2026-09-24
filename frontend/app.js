@@ -57,13 +57,17 @@ function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast-item toast-${type}`;
   
-  let icon = 'ℹ️';
-  if (type === 'success') icon = '✅';
-  else if (type === 'error') icon = '⚠️';
-  else if (type === 'warning') icon = '🔔';
+  let iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+  if (type === 'success') {
+    iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+  } else if (type === 'error') {
+    iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+  } else if (type === 'warning') {
+    iconSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#f59e0b" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+  }
 
   toast.innerHTML = `
-    <span class="toast-icon">${icon}</span>
+    <span class="toast-icon">${iconSvg}</span>
     <span class="toast-message">${message}</span>
   `;
 
@@ -118,7 +122,9 @@ function applyTheme(theme) {
   localStorage.setItem('swad_theme', theme);
   const themeIcon = document.getElementById('themeToggleIcon');
   if (themeIcon) {
-    themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+    themeIcon.innerHTML = theme === 'light'
+      ? `<svg class="ui-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`
+      : `<svg class="ui-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
   }
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   if (themeToggleBtn) {
@@ -468,7 +474,7 @@ function renderAddresses() {
     managerList.innerHTML = AppState.addresses.map(a => `
       <div class="address-card-row">
         <div class="address-info">
-          <span class="address-tag">${a.label} ${a.default ? '★ DEFAULT' : ''}</span>
+          <span class="address-tag">${a.label} ${a.default ? '<span style="color:var(--accent-saffron); font-weight:800; margin-left:4px;">DEFAULT</span>' : ''}</span>
           <span class="address-text">${a.street} ${a.suite || ''}, ${a.city}, ${a.state} ${a.zipCode}</span>
         </div>
         <div class="address-actions">
@@ -536,7 +542,7 @@ async function handleProfileSubmit(e) {
   if (confirmCard) confirmCard.style.display = 'none';
 
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span>⏳</span> Saving changes & dispatching alerts...';
+  submitBtn.innerHTML = '<svg class="spin-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Saving changes & dispatching alerts...';
 
   try {
     const payload = { name, email, phone, avatarUrl };
@@ -558,7 +564,7 @@ async function handleProfileSubmit(e) {
         errorAlert.style.display = 'block';
       }
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<span>💾</span> Save Changes & Dispatch Confirmation (UC-7)';
+      submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-2px; margin-right:4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Changes & Dispatch Confirmation (UC-7)';
       return;
     }
 
@@ -577,7 +583,7 @@ async function handleProfileSubmit(e) {
 
     showToast('Account details updated & notification dispatched via SMS/Email!', 'success');
     submitBtn.disabled = false;
-    submitBtn.innerHTML = '<span>💾</span> Save Changes & Dispatch Confirmation (UC-7)';
+    submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-2px; margin-right:4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Changes & Dispatch Confirmation (UC-7)';
   } catch (err) {
     console.error('Account update error:', err);
     if (errorAlert) {
@@ -585,7 +591,7 @@ async function handleProfileSubmit(e) {
       errorAlert.style.display = 'block';
     }
     submitBtn.disabled = false;
-    submitBtn.innerHTML = '<span>💾</span> Save Changes & Dispatch Confirmation (UC-7)';
+    submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-2px; margin-right:4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Changes & Dispatch Confirmation (UC-7)';
   }
 }
 
@@ -665,9 +671,14 @@ function renderRestaurantGrid(list) {
   if (list.length === 0) {
     grid.innerHTML = `
       <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
-        <span style="font-size: 3rem;">🔍</span>
-        <h3 style="margin-top: 12px; font-size: 1.25rem;">No kitchens found</h3>
-        <p style="color: var(--text-dim); margin-top: 6px;">Try searching for biryani, butter chicken, dosa, or pav bhaji.</p>
+        <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: var(--bg-surface); margin-bottom: 12px; border: 1px solid var(--border-subtle);">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--text-muted)" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);">No kitchens found</h3>
+        <p style="color: var(--text-dim); margin-top: 6px; font-size: 0.875rem;">Try searching for biryani, butter chicken, dosa, or street chaat.</p>
       </div>
     `;
     countEl.textContent = 'Showing 0 kitchens';
@@ -681,11 +692,13 @@ function renderRestaurantGrid(list) {
       <div class="card-media">
         <img src="${r.imageUrl}" alt="${r.name}" class="card-img" loading="lazy">
         <div class="card-badges">
-          ${r.featured ? '<span class="card-badge-pill featured">★ TOP PICK</span>' : ''}
+          ${r.featured ? '<span class="card-badge-pill featured"><svg class="star-svg" viewBox="0 0 24 24" width="10" height="10" fill="currentColor" style="margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>TOP PICK</span>' : ''}
           <span class="card-badge-pill">${r.cuisine}</span>
         </div>
         <button class="fav-btn ${r.favorite ? 'active' : ''}" id="favBtn-${r.id}" onclick="event.stopPropagation(); toggleFavorite(${r.id})" title="${r.favorite ? 'Remove from favorites' : 'Add to favorites'}">
-          ${r.favorite ? '❤️' : '🤍'}
+          <svg class="heart-svg ${r.favorite ? 'favorited' : ''}" viewBox="0 0 24 24" width="18" height="18" fill="${r.favorite ? '#f43f5e' : 'none'}" stroke="${r.favorite ? '#f43f5e' : 'currentColor'}" stroke-width="2">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          </svg>
         </button>
       </div>
 
@@ -693,21 +706,36 @@ function renderRestaurantGrid(list) {
         <div class="card-title-row">
           <h3 class="card-name">${r.name}</h3>
           <div class="card-rating">
-            <span>★</span>
+            <svg class="star-svg" viewBox="0 0 24 24" width="11" height="11" fill="currentColor">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
             <span>${r.rating.toFixed(1)}</span>
           </div>
         </div>
 
         <div class="card-cuisine">${r.cuisine} • ${r.reviewCount} reviews</div>
-        <div class="card-address">📍 ${r.address}</div>
+        <div class="card-address">
+          <svg class="meta-svg" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          ${r.address}
+        </div>
 
         <div class="card-meta-row">
           <div class="card-meta-item">
-            <span>⏱️</span>
+            <svg class="meta-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
             <strong>${r.deliveryTimeMinutes} mins</strong>
           </div>
           <div class="card-meta-item">
-            <span>🛵</span>
+            <svg class="meta-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;">
+              <circle cx="5.5" cy="17.5" r="3.5"/>
+              <circle cx="18.5" cy="17.5" r="3.5"/>
+              <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>
+            </svg>
             <span>₹${r.deliveryFee.toFixed(0)} delivery</span>
           </div>
           <div class="card-meta-item" style="margin-left: auto;">
@@ -761,10 +789,10 @@ window.openMenuModal = async function(restaurantId) {
   AppState.activeRestaurant = restaurant;
   document.getElementById('menuRestaurantName').textContent = restaurant.name;
   document.getElementById('menuCuisineBadge').textContent = restaurant.cuisine;
-  document.getElementById('menuRatingSpan').textContent = `⭐ ${restaurant.rating.toFixed(2)} (${restaurant.reviewCount} reviews)`;
-  document.getElementById('menuEtaSpan').textContent = `⏱️ ${restaurant.deliveryTimeMinutes} mins`;
+  document.getElementById('menuRatingSpan').innerHTML = `<svg class="star-svg" viewBox="0 0 24 24" width="13" height="13" fill="#f59e0b" style="margin-right: 3px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${restaurant.rating.toFixed(2)} (${restaurant.reviewCount} reviews)`;
+  document.getElementById('menuEtaSpan').innerHTML = `<svg class="meta-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 3px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${restaurant.deliveryTimeMinutes} mins`;
   document.getElementById('menuMinOrderSpan').textContent = `Min Order: ₹${restaurant.minOrderAmount.toFixed(0)}`;
-  document.getElementById('menuAddressSpan').textContent = `📍 ${restaurant.address}`;
+  document.getElementById('menuAddressSpan').innerHTML = `<svg class="meta-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 3px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> ${restaurant.address}`;
   document.getElementById('menuHeroBanner').style.backgroundImage = `url('${restaurant.imageUrl}')`;
 
   // Fetch Menu Items
@@ -801,10 +829,10 @@ function renderMenuItems() {
   container.innerHTML = items.map(item => `
     <div class="menu-item-card" id="menuItem-${item.id}">
       <div class="item-info">
-        <div class="item-title-row">
-          <span style="font-size: 0.9rem;">${item.vegetarian ? '🟢' : '🔴'}</span>
+        <div class="item-title-row" style="align-items: center; gap: 8px;">
+          <span class="${item.vegetarian ? 'fssai-veg' : 'fssai-nonveg'}" title="${item.vegetarian ? 'Pure Vegetarian' : 'Non-Vegetarian'}"></span>
           <h4 class="item-name">${item.name}</h4>
-          ${item.spicy ? '<span class="item-badge spicy">🌶️ SPICY</span>' : ''}
+          ${item.spicy ? '<span class="item-badge spicy"><svg class="badge-bolt-svg" viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M12 2C11 4 9 5.5 7 6M15.5 5C14.2 6.2 13 8 13 10.5c0 6.5 6 8.5 6 13a6.5 6.5 0 0 1-13 0c0-4.5 3.5-8 5-12 1-2.6.8-4.5 4.5-6.5z"/></svg> SPICY</span>' : ''}
         </div>
         <p class="item-desc">${item.description}</p>
         <span class="item-price">₹${item.price.toFixed(0)}</span>
@@ -1017,8 +1045,7 @@ function renderTrackingView(t) {
   document.getElementById('trackStatusMessage').textContent = t.statusMessage;
 
   document.getElementById('trackDriverName').textContent = t.driverName;
-  document.getElementById('trackVehicle').textContent = t.vehicleType;
-  document.getElementById('trackDriverRating').textContent = `⭐ ${t.driverRating.toFixed(2)} Rating (Vaccinated)`;
+  document.getElementById('trackDriverRating').innerHTML = `<svg class="star-svg" viewBox="0 0 24 24" width="12" height="12" fill="#f59e0b" style="margin-right:3px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${t.driverRating.toFixed(2)} Rating (Vaccinated)`;
   document.getElementById('callDriverBtn').href = `tel:${t.driverPhone}`;
 
   // Update Stepper
@@ -1244,7 +1271,7 @@ async function loadSupportTickets() {
             <span class="ticket-status-badge ${t.status}">${t.status}</span>
           </div>
           <p class="ticket-desc">${t.description}</p>
-          <div class="ticket-notes">ℹ️ Resolution: ${t.resolutionNotes || 'Agent reviewing ticket...'}</div>
+          <div class="ticket-notes"><svg class="ui-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Resolution: ${t.resolutionNotes || 'Agent reviewing ticket...'}</div>
         </div>
       `).join('');
     }
@@ -1371,7 +1398,7 @@ async function handleUserLogin(e) {
 
   if (errorAlert) errorAlert.style.display = 'none';
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span>⏳</span> Signing In...';
+  submitBtn.innerHTML = '<svg class="spin-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Signing In...';
 
   try {
     const res = await fetch(`${API_BASE}/api/v1/users/login`, {
@@ -1391,7 +1418,7 @@ async function handleUserLogin(e) {
         errorAlert.style.display = 'block';
       }
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<span>🔐</span> Sign In to SwadExpress';
+      submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-2px; margin-right:4px;"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Sign In to SwadExpress';
       return;
     }
 
@@ -1409,7 +1436,7 @@ async function handleUserLogin(e) {
     }
   } finally {
     submitBtn.disabled = false;
-    submitBtn.innerHTML = '<span>🔐</span> Sign In to SwadExpress';
+    submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-2px; margin-right:4px;"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Sign In to SwadExpress';
   }
 }
 
@@ -1432,7 +1459,7 @@ async function handleUserRegistration(e) {
   };
 
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span>⏳</span> Validating & Creating Account...';
+  submitBtn.innerHTML = '<svg class="spin-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Validating & Creating Account...';
 
   try {
     const res = await fetch(`${API_BASE}/api/v1/users/register`, {
@@ -1447,7 +1474,7 @@ async function handleUserRegistration(e) {
       errorAlert.textContent = data.message || data.error || 'Registration failed. Please verify your information.';
       errorAlert.style.display = 'block';
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<span>🚀</span> Create Account & Send Confirmation';
+      submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-2px; margin-right:4px;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg> Create Account & Send Confirmation';
       return;
     }
 
@@ -1474,7 +1501,7 @@ async function handleUserRegistration(e) {
     errorAlert.style.display = 'block';
   } finally {
     submitBtn.disabled = false;
-    submitBtn.innerHTML = '<span>🚀</span> Create Account & Send Confirmation';
+    submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-2px; margin-right:4px;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg> Create Account & Send Confirmation';
   }
 }
 
@@ -1584,7 +1611,7 @@ function updateHeroDeliveryBadge(city) {
   const heroBadge = document.getElementById('heroDeliveryBadge');
   if (heroBadge) {
     const formattedCity = (city || 'BENGALURU').toUpperCase();
-    heroBadge.textContent = `⚡ SUPERFAST 20-MIN DELIVERY ACROSS ${formattedCity}`;
+    heroBadge.innerHTML = `<svg class="badge-bolt-svg" viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> SUPERFAST 20-MIN DELIVERY ACROSS ${formattedCity}`;
     heroBadge.classList.remove('badge-pulse');
     void heroBadge.offsetWidth;
     heroBadge.classList.add('badge-pulse');
@@ -1600,18 +1627,25 @@ function openLocationPickerModal() {
   const quickList = document.getElementById('quickAddressesList');
   if (quickContainer && quickList && AppState.addresses && AppState.addresses.length > 0) {
     quickContainer.style.display = 'block';
-    quickList.innerHTML = AppState.addresses.map(a => `
-      <div class="quick-addr-item" onclick="selectQuickAddress(${a.id})" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-card); border: 1px solid ${a.id === AppState.selectedAddressId ? 'var(--accent-saffron)' : 'var(--border-subtle)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 1.1rem;">${a.label === 'Home' ? '🏠' : a.label === 'Office' ? '🏢' : '📍'}</span>
-          <div>
-            <div style="font-size: 0.825rem; font-weight: 700; color: var(--text-main);">${a.label}: ${a.street}</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">${a.city}, ${a.zipCode}</div>
+    quickList.innerHTML = AppState.addresses.map(a => {
+      const iconSvg = a.label === 'Home'
+        ? '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'
+        : a.label === 'Office'
+        ? '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>'
+        : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+      return `
+        <div class="quick-addr-item" onclick="selectQuickAddress(${a.id})" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-card); border: 1px solid ${a.id === AppState.selectedAddressId ? 'var(--accent-saffron)' : 'var(--border-subtle)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="color: var(--accent-saffron); display: flex; align-items: center;">${iconSvg}</span>
+            <div>
+              <div style="font-size: 0.825rem; font-weight: 700; color: var(--text-main);">${a.label}: ${a.street}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">${a.city}, ${a.zipCode}</div>
+            </div>
           </div>
+          <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-saffron);">${a.id === AppState.selectedAddressId ? '✓ ACTIVE' : 'Select'}</span>
         </div>
-        <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-saffron);">${a.id === AppState.selectedAddressId ? '✓ ACTIVE' : 'Select'}</span>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   } else if (quickContainer) {
     quickContainer.style.display = 'none';
   }
@@ -1652,9 +1686,15 @@ function initDeliveryMap() {
 
     const customIcon = L.divIcon({
       className: 'custom-map-pin',
-      html: '<div class="pin-marker">📍</div>',
-      iconSize: [32, 32],
-      iconAnchor: [16, 30]
+      html: `<div class="pin-marker-svg-wrap">
+        <svg viewBox="0 0 32 40" width="32" height="40" fill="none">
+          <path d="M16 0C7.16 0 0 7.16 0 16c0 10.5 14.2 22.8 15.1 23.6a1.2 1.2 0 0 0 1.8 0C17.8 38.8 32 26.5 32 16 32 7.16 24.84 0 16 0Z" fill="#ea580c"/>
+          <circle cx="16" cy="15" r="6" fill="#ffffff"/>
+          <circle cx="16" cy="15" r="3" fill="#ea580c"/>
+        </svg>
+      </div>`,
+      iconSize: [32, 40],
+      iconAnchor: [16, 40]
     });
 
     deliveryMarker = L.marker([currentLat, currentLng], {
@@ -1748,7 +1788,7 @@ function confirmLocationSelection() {
   const modal = document.getElementById('locationPickerModal');
   if (modal) modal.style.display = 'none';
 
-  showToast(`📍 Delivery location set to ${locality}, ${city}! 20-min express delivery active.`, 'success');
+  showToast(`Delivery location set to ${locality}, ${city}! 20-min express delivery active.`, 'success');
 }
 
 window.selectQuickAddress = function(id) {
