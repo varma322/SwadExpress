@@ -38,8 +38,8 @@ const AppState = {
   locationLng: 77.6408,
   activeOrders: [],
   currentTracking: null,
-  trackingPollTimer: null,
-  userTickets: []
+  userTickets: [],
+  returnToCartAfterAddress: false
 };
 
 // ==========================================
@@ -283,7 +283,7 @@ function setupEventListeners() {
   // Checkout Actions
   document.getElementById('placeOrderBtn').addEventListener('click', handlePlaceOrder);
   document.getElementById('openAddAddressModalBtn').addEventListener('click', () => {
-    openAccountModal('addresses');
+    openAccountModal('addresses', true);
   });
 
   // Tracking Modal
@@ -319,17 +319,46 @@ function setupEventListeners() {
   // Account Modal
   document.getElementById('closeAccountModalBtn').addEventListener('click', () => {
     document.getElementById('accountModal').style.display = 'none';
+    if (AppState.returnToCartAfterAddress) {
+      AppState.returnToCartAfterAddress = false;
+      openCartDrawer();
+    }
   });
+  const accountModalOverlay = document.getElementById('accountModal');
+  if (accountModalOverlay) {
+    accountModalOverlay.addEventListener('click', (e) => {
+      if (e.target === accountModalOverlay) {
+        accountModalOverlay.style.display = 'none';
+        if (AppState.returnToCartAfterAddress) {
+          AppState.returnToCartAfterAddress = false;
+          openCartDrawer();
+        }
+      }
+    });
+  }
   document.getElementById('profileTabBtn').addEventListener('click', () => switchAccountTab('profile'));
   document.getElementById('addressesTabBtn').addEventListener('click', () => switchAccountTab('addresses'));
   document.getElementById('profileForm').addEventListener('submit', handleProfileSubmit);
   document.getElementById('addNewAddressBtn').addEventListener('click', () => {
     document.getElementById('newAddressForm').style.display = 'block';
+    setTimeout(() => document.getElementById('newAddressLabel')?.focus(), 100);
   });
   document.getElementById('cancelAddressBtn').addEventListener('click', () => {
     document.getElementById('newAddressForm').style.display = 'none';
+    if (AppState.returnToCartAfterAddress && (!AppState.addresses || AppState.addresses.length === 0)) {
+      document.getElementById('accountModal').style.display = 'none';
+      AppState.returnToCartAfterAddress = false;
+      openCartDrawer();
+    }
   });
   document.getElementById('newAddressForm').addEventListener('submit', handleNewAddressSubmit);
+  const saveAddressBtn = document.getElementById('saveNewAddressBtn');
+  if (saveAddressBtn) {
+    saveAddressBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleNewAddressSubmit(e);
+    });
+  }
 
   // User Registration & Auth (UC-1)
   const navRegisterBtn = document.getElementById('navRegisterBtn');
@@ -476,7 +505,7 @@ function renderAddresses() {
             <span>No Delivery Address Added</span>
           </div>
           <p class="empty-address-desc">Please add a delivery location to enable order checkout.</p>
-          <button type="button" class="add-address-pill-btn" onclick="openAccountModal('addresses')">
+          <button type="button" class="add-address-pill-btn" onclick="openAccountModal('addresses', true)">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             + Add Delivery Address
           </button>
@@ -634,7 +663,7 @@ async function handleProfileSubmit(e) {
 }
 
 async function handleNewAddressSubmit(e) {
-  e.preventDefault();
+  if (e && e.preventDefault) e.preventDefault();
   const label = document.getElementById('newAddressLabel').value.trim();
   const street = document.getElementById('newAddressStreet').value.trim();
   const suite = document.getElementById('newAddressSuite').value.trim();
@@ -642,20 +671,49 @@ async function handleNewAddressSubmit(e) {
   const state = document.getElementById('newAddressState').value.trim();
   const zipCode = document.getElementById('newAddressZip').value.trim();
 
+  if (!label || !street || !city || !state || !zipCode) {
+    showToast('Please fill in all required address fields', 'warning');
+    return;
+  }
+
+  const saveBtn = document.getElementById('saveNewAddressBtn');
+  if (saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+  }
+
   try {
     const res = await fetch(`${API_BASE}/api/v1/users/${AppState.currentUser.id}/addresses`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ label, street, suite, city, state, zipCode, default: false })
+      body: JSON.stringify({ label, street, suite, city, state, zipCode, default: false, isDefault: false })
     });
     if (res.ok) {
+      const createdAddr = await res.json();
       showToast('New location saved to address book!', 'success');
       document.getElementById('newAddressForm').reset();
       document.getElementById('newAddressForm').style.display = 'none';
+      if (createdAddr && createdAddr.id) {
+        AppState.selectedAddressId = createdAddr.id;
+      }
       await loadUserData();
+
+      // Return smoothly to cart drawer if user was checking out
+      if (AppState.returnToCartAfterAddress || (AppState.cart && AppState.cart.items && AppState.cart.items.length > 0)) {
+        AppState.returnToCartAfterAddress = false;
+        document.getElementById('accountModal').style.display = 'none';
+        openCartDrawer();
+      }
+    } else {
+      showToast('Failed to add address', 'error');
     }
   } catch (err) {
     showToast('Failed to add address', 'error');
+  } finally {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Address';
+    }
   }
 }
 
@@ -1053,7 +1111,7 @@ async function handlePlaceOrder() {
       addrBlock.classList.add('highlight-error');
       setTimeout(() => addrBlock.classList.remove('highlight-error'), 2500);
     }
-    openAccountModal('addresses');
+    openAccountModal('addresses', true);
     return;
   }
 
@@ -1078,7 +1136,7 @@ async function handlePlaceOrder() {
 
   if (!deliveryAddress || deliveryAddress.length < 5) {
     showToast('The selected delivery address is incomplete. Please update it.', 'warning');
-    openAccountModal('addresses');
+    openAccountModal('addresses', true);
     return;
   }
 
@@ -1430,7 +1488,14 @@ async function handleTicketSubmit(e) {
 // ==========================================
 // Account Modal Management (UC-7, UC-9)
 // ==========================================
-async function openAccountModal(tab = 'profile') {
+async function openAccountModal(tab = 'profile', openNewForm = false) {
+  // If cart drawer is open, smoothly close it and remember to return to it
+  const cartDrawer = document.getElementById('cartDrawer');
+  if (cartDrawer && cartDrawer.style.display !== 'none') {
+    AppState.returnToCartAfterAddress = true;
+    closeCartDrawer();
+  }
+
   // Step 2: Account Management Service retrieves the user’s account details
   await loadUserData();
 
@@ -1443,6 +1508,21 @@ async function openAccountModal(tab = 'profile') {
 
   document.getElementById('accountModal').style.display = 'flex';
   switchAccountTab(tab);
+
+  if (tab === 'addresses') {
+    const newAddrForm = document.getElementById('newAddressForm');
+    if (newAddrForm) {
+      if (openNewForm || !AppState.addresses || AppState.addresses.length === 0) {
+        newAddrForm.style.display = 'block';
+        setTimeout(() => {
+          const labelInput = document.getElementById('newAddressLabel');
+          if (labelInput) labelInput.focus();
+        }, 150);
+      } else {
+        newAddrForm.style.display = 'none';
+      }
+    }
+  }
 }
 
 function switchAccountTab(tab) {

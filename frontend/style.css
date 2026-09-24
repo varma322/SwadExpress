@@ -906,7 +906,7 @@ body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 300;
   background: var(--bg-overlay);
   backdrop-filter: blur(8px);
   display: flex;
@@ -1287,7 +1287,7 @@ body {
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  z-index: 210;
+  z-index: 200;
   background: var(--bg-overlay);
   backdrop-filter: blur(8px);
   display: flex;

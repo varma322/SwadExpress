@@ -1,5 +1,7 @@
 package com.fooddelivery.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
 public class AddressDto {
@@ -24,11 +26,13 @@ public class AddressDto {
     @NotBlank(message = "Zip code is required")
     private String zipCode;
 
-    private boolean isDefault;
+    @JsonProperty("default")
+    @JsonAlias({"isDefault", "default"})
+    private Boolean isDefault = false;
 
     public AddressDto() {}
 
-    public AddressDto(Long id, Long userId, String label, String street, String suite, String city, String state, String zipCode, boolean isDefault) {
+    public AddressDto(Long id, Long userId, String label, String street, String suite, String city, String state, String zipCode, Boolean isDefault) {
         this.id = id;
         this.userId = userId;
         this.label = label;
@@ -37,7 +41,7 @@ public class AddressDto {
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
-        this.isDefault = isDefault;
+        this.isDefault = isDefault != null && isDefault;
     }
 
     public Long getId() { return id; }
@@ -64,6 +68,9 @@ public class AddressDto {
     public String getZipCode() { return zipCode; }
     public void setZipCode(String zipCode) { this.zipCode = zipCode; }
 
-    public boolean isDefault() { return isDefault; }
-    public void setDefault(boolean aDefault) { isDefault = aDefault; }
+    @JsonProperty("default")
+    public boolean isDefault() { return isDefault != null && isDefault; }
+
+    @JsonProperty("default")
+    public void setDefault(Boolean aDefault) { this.isDefault = (aDefault != null && aDefault); }
 }
