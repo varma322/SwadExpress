@@ -1,6 +1,7 @@
 package com.fooddelivery.order.dto;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -17,7 +18,7 @@ public class CreateOrderRequestDto {
     @Valid
     private List<OrderItemRequestDto> items;
 
-    @NotNull(message = "Delivery address is required")
+    @NotBlank(message = "Delivery address is required and cannot be blank")
     private String deliveryAddress;
 
     private String deliveryInstructions;

@@ -448,41 +448,79 @@ function renderAddresses() {
   const navDisplay = document.getElementById('navAddressDisplay');
   const defaultAddr = AppState.addresses.find(a => a.default) || AppState.addresses[0];
   if (defaultAddr) {
-    AppState.selectedAddressId = defaultAddr.id;
-    navDisplay.textContent = `${defaultAddr.label}: ${defaultAddr.street}, ${defaultAddr.city}`;
-    if (defaultAddr.city) {
-      AppState.currentCity = defaultAddr.city;
-      AppState.currentLocality = defaultAddr.suite || defaultAddr.street || 'Indiranagar';
-      updateHeroDeliveryBadge(defaultAddr.city);
+    if (!AppState.selectedAddressId || !AppState.addresses.some(a => a.id === AppState.selectedAddressId)) {
+      AppState.selectedAddressId = defaultAddr.id;
     }
+    const chosen = AppState.addresses.find(a => a.id === AppState.selectedAddressId) || defaultAddr;
+    navDisplay.textContent = `${chosen.label}: ${chosen.street}, ${chosen.city}`;
+    if (chosen.city) {
+      AppState.currentCity = chosen.city;
+      AppState.currentLocality = chosen.suite || chosen.street || 'Indiranagar';
+      updateHeroDeliveryBadge(chosen.city);
+    }
+  } else {
+    AppState.selectedAddressId = null;
+    navDisplay.textContent = 'Select Delivery Location';
   }
 
   // Render in Cart Drawer checkout
   const cartOptionsList = document.getElementById('addressOptionsList');
-  cartOptionsList.innerHTML = AppState.addresses.map(a => `
-    <label class="address-radio-label">
-      <input type="radio" name="selectedDeliveryAddress" value="${a.id}" ${a.id === AppState.selectedAddressId ? 'checked' : ''} onchange="selectAddress(${a.id})">
-      <div>
-        <strong>${a.label}</strong>: ${a.street} ${a.suite ? '(' + a.suite + ')' : ''}, ${a.city} ${a.zipCode}
-      </div>
-    </label>
-  `).join('');
+  if (cartOptionsList) {
+    if (!AppState.addresses || AppState.addresses.length === 0) {
+      cartOptionsList.innerHTML = `
+        <div class="empty-address-warning">
+          <div class="empty-address-header">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>No Delivery Address Added</span>
+          </div>
+          <p class="empty-address-desc">Please add a delivery location to enable order checkout.</p>
+          <button type="button" class="add-address-pill-btn" onclick="openAccountModal('addresses')">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            + Add Delivery Address
+          </button>
+        </div>
+      `;
+    } else {
+      cartOptionsList.innerHTML = AppState.addresses.map(a => `
+        <label class="address-radio-label ${a.id === AppState.selectedAddressId ? 'selected' : ''}">
+          <input type="radio" name="selectedDeliveryAddress" value="${a.id}" ${a.id === AppState.selectedAddressId ? 'checked' : ''} onchange="selectAddress(${a.id})">
+          <div class="address-radio-content">
+            <div class="address-radio-header">
+              <strong>${a.label}</strong>
+              ${a.default ? '<span class="address-default-badge">DEFAULT</span>' : ''}
+            </div>
+            <span class="address-radio-sub">${a.street}${a.suite ? ' (' + a.suite + ')' : ''}, ${a.city} ${a.zipCode}</span>
+          </div>
+        </label>
+      `).join('');
+    }
+  }
 
   // Render in Account Modal
   const managerList = document.getElementById('addressesManagerList');
   if (managerList) {
-    managerList.innerHTML = AppState.addresses.map(a => `
-      <div class="address-card-row">
-        <div class="address-info">
-          <span class="address-tag">${a.label} ${a.default ? '<span style="color:var(--accent-saffron); font-weight:800; margin-left:4px;">DEFAULT</span>' : ''}</span>
-          <span class="address-text">${a.street} ${a.suite || ''}, ${a.city}, ${a.state} ${a.zipCode}</span>
+    if (!AppState.addresses || AppState.addresses.length === 0) {
+      managerList.innerHTML = `
+        <div style="text-align: center; padding: 30px; color: var(--text-dim);">
+          <p>No saved addresses found. Click "+ Add New Location" above to add one.</p>
         </div>
-        <div class="address-actions">
-          ${!a.default ? `<button class="secondary-btn" onclick="setDefaultAddress(${a.id})">Set Default</button>` : ''}
-          <button class="secondary-btn" onclick="deleteAddress(${a.id})">Delete</button>
+      `;
+    } else {
+      managerList.innerHTML = AppState.addresses.map(a => `
+        <div class="address-card-row">
+          <div class="address-info">
+            <span class="address-tag">${a.label} ${a.default ? '<span style="color:var(--accent-saffron); font-weight:800; margin-left:4px;">DEFAULT</span>' : ''}</span>
+            <span class="address-text">${a.street} ${a.suite || ''}, ${a.city}, ${a.state} ${a.zipCode}</span>
+          </div>
+          <div class="address-actions">
+            ${!a.default ? `<button class="secondary-btn" onclick="setDefaultAddress(${a.id})">Set Default</button>` : ''}
+            <button class="secondary-btn" onclick="deleteAddress(${a.id})">Delete</button>
+          </div>
         </div>
-      </div>
-    `).join('');
+      `).join('');
+    }
   }
 }
 
@@ -993,17 +1031,59 @@ function closeCartDrawer() {
 }
 
 async function handlePlaceOrder() {
-  if (AppState.cart.items.length === 0) return;
+  if (!AppState.currentUser) {
+    showToast('Please sign in to place an order', 'warning');
+    openRegisterModal('login');
+    return;
+  }
+
+  if (!AppState.cart.items || AppState.cart.items.length === 0) {
+    showToast('Your basket is empty. Add dishes before checkout!', 'warning');
+    return;
+  }
 
   const btn = document.getElementById('placeOrderBtn');
   const btnText = document.getElementById('placeOrderText');
+
+  // Address validation: Must have at least one address added
+  if (!AppState.addresses || AppState.addresses.length === 0) {
+    showToast('No delivery address added! Please add an address to confirm your order.', 'warning');
+    const addrBlock = document.querySelector('.address-block');
+    if (addrBlock) {
+      addrBlock.classList.add('highlight-error');
+      setTimeout(() => addrBlock.classList.remove('highlight-error'), 2500);
+    }
+    openAccountModal('addresses');
+    return;
+  }
+
+  // Address validation: Must have a valid address selected
+  const chosenAddr = AppState.addresses.find(a => a.id === AppState.selectedAddressId);
+  if (!chosenAddr) {
+    showToast('Please select a delivery address for this order.', 'warning');
+    const addrBlock = document.querySelector('.address-block');
+    if (addrBlock) {
+      addrBlock.classList.add('highlight-error');
+      setTimeout(() => addrBlock.classList.remove('highlight-error'), 2500);
+    }
+    return;
+  }
+
+  const streetPart = chosenAddr.street || '';
+  const suitePart = chosenAddr.suite ? ` ${chosenAddr.suite}` : '';
+  const cityPart = chosenAddr.city ? `, ${chosenAddr.city}` : '';
+  const statePart = chosenAddr.state ? `, ${chosenAddr.state}` : '';
+  const zipPart = chosenAddr.zipCode ? ` - ${chosenAddr.zipCode}` : '';
+  const deliveryAddress = `${streetPart}${suitePart}${cityPart}${statePart}${zipPart}`.trim();
+
+  if (!deliveryAddress || deliveryAddress.length < 5) {
+    showToast('The selected delivery address is incomplete. Please update it.', 'warning');
+    openAccountModal('addresses');
+    return;
+  }
+
   btn.disabled = true;
   btnText.textContent = 'Verifying UPI / Payment...';
-
-  const chosenAddr = AppState.addresses.find(a => a.id === AppState.selectedAddressId) || AppState.addresses[0];
-  const deliveryAddress = chosenAddr 
-    ? `${chosenAddr.street} ${chosenAddr.suite || ''}, ${chosenAddr.city}, ${chosenAddr.state} ${chosenAddr.zipCode}`
-    : 'Flat 402, Shanti Niketan, Indiranagar, Bengaluru - 560038';
 
   const instructions = document.getElementById('deliveryInstructionsInput').value.trim();
   const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;

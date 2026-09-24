@@ -56,6 +56,10 @@ public class OrderService {
         Restaurant restaurant = restaurantRepository.findById(dto.getRestaurantId())
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " + dto.getRestaurantId()));
 
+        if (dto.getDeliveryAddress() == null || dto.getDeliveryAddress().trim().isEmpty()) {
+            throw new BadRequestException("Delivery address is required. Please select or add a delivery address.");
+        }
+
         if (dto.getItems() == null || dto.getItems().isEmpty()) {
             throw new BadRequestException("Order must contain at least one item.");
         }
